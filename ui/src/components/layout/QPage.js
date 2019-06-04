@@ -8,7 +8,7 @@ export default Vue.extend({
   inject: {
     pageContainer: {
       default () {
-        console.error('QPage needs to be child of QPageContainer')
+        console.error('QPage needs to be child of WPageContainer')
       }
     },
     layout: {}

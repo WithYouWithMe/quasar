@@ -1,15 +1,15 @@
 import Vue from 'vue'
 
-import QField from '../field/QField.js'
+import WField from '../field/QField.js'
 
 import MaskMixin from '../../mixins/mask.js'
 import debounce from '../../utils/debounce.js'
 import { stop } from '../../utils/event.js'
 
 export default Vue.extend({
-  name: 'QInput',
+  name: 'WInput',
 
-  mixins: [ QField, MaskMixin ],
+  mixins: [ WField, MaskMixin ],
 
   props: {
     value: [String, Number],
@@ -25,7 +25,19 @@ export default Vue.extend({
     autogrow: Boolean, // makes a textarea
 
     inputClass: [Array, String, Object],
-    inputStyle: [Array, String, Object]
+    inputStyle: [Array, String, Object],
+    outlined: {
+      type: Boolean,
+      default: true
+    },
+    stackLabel: {
+      type: Boolean,
+      default: true
+    },
+    bgColor: {
+      type: String,
+      default: 'white'
+    }
   },
 
   watch: {
