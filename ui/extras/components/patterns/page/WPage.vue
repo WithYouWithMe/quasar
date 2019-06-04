@@ -1,6 +1,6 @@
 <template lang="pug">
-  q-page.w-page(:padding="padding")
-    .row(:class="{ 'offset-md-2': offset, 'col-md-8': offset }")
+  q-page.w-page.row(:padding="padding")
+    div(:class="{ 'offset-md-2': offset, 'col-md-8': offset }")
       .row.justify-between.items-end
         .text-page-title {{title}}
         slot(name="title-right")
