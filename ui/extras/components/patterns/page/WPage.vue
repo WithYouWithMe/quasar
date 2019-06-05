@@ -1,19 +1,20 @@
 <template lang="pug">
-  q-page.w-page(:padding="padding")
-    .row(:class="{ 'offset-md-2': offset, 'col-md-8': offset }")
+  q-page.w-page.row.col-12(:padding="padding")
+    .row.col-12(:class="{ 'offset-md-2': offset, 'col-md-8': offset }")
       .row.col-12.justify-between.items-end
         .text-page-title {{title}}
         slot(name="title-right")
+          w-space
       slot
     w-page-scroller(position="bottom-right" :scroll-offset="150" :offset="[18, 18]")
       w-btn(fab icon="mdi-chevron-double-up" color="accent")
 </template>
 
 <script>
-import { QPage, WPageScroller } from "quasar";
+import { QPage, WPageScroller, WSpace } from "quasar";
 
 export default {
-  components: { QPage, WPageScroller },
+  components: { QPage, WPageScroller, WSpace },
   name: "WPage",
   props: {
     offset: {
