@@ -6,10 +6,11 @@
         w-logotype.gt-sm.q-ma-md(:text="productName" orientation="horizontal" :class="{ 'cursor-pointer': logotypeClickable }" @click.native="$emit('logotype-click')")
         w-toolbar-title {{toolbarTitle}}
         slot(name="toolbar-right")
-    w-drawer(v-if="hasLeftDrawer" v-model="leftDrawerOpen" :mini="leftDrawerMini" elevated content-class="left-drawer")
+    w-drawer(v-if="hasLeftDrawer" v-model="leftDrawerOpen" :mini="leftDrawerMini" elevated content-class="left-drawer" :content-class="drawerContentClass")
       slot(name="left-drawer")
-    w-page-container
-      router-view
+    slot
+      w-page-container
+        router-view
 </template>
 
 <script>
@@ -34,6 +35,10 @@ export default {
     container: {
       type: Boolean,
       default: false,
+    },
+    drawerContentClass: {
+      type: String,
+      default: null,
     },
   },
   data() {

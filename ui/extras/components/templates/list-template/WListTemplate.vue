@@ -12,7 +12,10 @@
 </template>
 
 <script>
+import { WCard, WSeparator, WCardSection } from "quasar";
+
 export default {
+  components: { WCard, WSeparator, WCardSection },
   props: {
     title: {
       type: String,
