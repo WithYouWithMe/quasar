@@ -21,11 +21,12 @@
 </template>
 
 <script>
-import { WCard } from "quasar";
+import { WCard, WCardSection, WImg, WChip } from "quasar";
 
 export default {
   name: "WActionCard",
   mixins: [ WCard ],
+  components: { WCard, WCardSection, WImg, WChip },
   props: {
     imgSrc: {
       type: String,

@@ -10,10 +10,10 @@
 </template>
 
 <script>
-import { QPage } from "quasar";
+import { QPage, WPageScroller } from "quasar";
 
 export default {
-  components: { QPage },
+  components: { QPage, WPageScroller },
   name: "WPage",
   props: {
     offset: {
