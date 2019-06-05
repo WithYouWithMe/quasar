@@ -2,7 +2,7 @@
   w-page(:title="title" padding offset)
     template(v-slot:title-right)
       slot(name="title-right")
-    w-card.q-mt-md
+    w-card.q-mt-md.col-12
       w-card-section.filters
         .row
           slot(name="filters")
