@@ -1,5 +1,5 @@
 <template lang="pug">
-  q-page.w-page.row.col-12(:padding="padding")
+  q-page.w-page.row.col-12.items-start(:padding="padding")
     .row.col-12(:class="{ 'offset-md-2': offset, 'col-md-8': offset }")
       .row.col-12.justify-between.items-end
         .text-page-title {{title}}
