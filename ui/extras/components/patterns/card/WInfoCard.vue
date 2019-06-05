@@ -10,11 +10,12 @@
 </template>
 
 <script>
-import { WCard } from "quasar";
+import { WCard, WCardSection, WIcon } from "quasar";
 
 export default {
   name: "WInfoCard",
   mixins: [ WCard ],
+  components: { WCard, WCardSection, WIcon },
   props: {
     details: {
       type: Array,
