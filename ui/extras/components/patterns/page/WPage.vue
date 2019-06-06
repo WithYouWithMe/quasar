@@ -5,7 +5,8 @@
         .text-page-title {{title}}
         slot(name="title-right")
           w-space
-      slot
+      .full-width
+        slot
     w-page-scroller(position="bottom-right" :scroll-offset="150" :offset="[18, 18]")
       w-btn(fab icon="mdi-chevron-double-up" color="accent")
 </template>

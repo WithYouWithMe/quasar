@@ -7,6 +7,7 @@ import WStepper from "./components/elements/stepper/WStepper";
 // Patterns
 import WActionCard from "./components/patterns/card/WActionCard";
 import WCollapsible from "./components/patterns/collapsible/WCollapsible";
+import WDateRange from "./components/patterns/date-range/WDateRange";
 import WInfoCard from "./components/patterns/card/WInfoCard";
 import WDialog from "./components/patterns/dialog/WDialog";
 import WLayout from "./components/patterns/layout/WLayout";
@@ -30,6 +31,7 @@ function install(Vue) {
   Vue.component("WActionCard", WActionCard);
   Vue.component("WInfoCard", WInfoCard);
   Vue.component("WCollapsible", WCollapsible);
+  Vue.component("WDateRange", WDateRange);
   Vue.component("WDialog", WDialog);
   Vue.component("WLayout", WLayout);
   Vue.component("WPage", WPage);
