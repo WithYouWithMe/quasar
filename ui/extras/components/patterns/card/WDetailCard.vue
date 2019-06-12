@@ -6,7 +6,7 @@
           w-btn.full-width(:label="buttonLabel" icon-right="mdi-check" color="primary" @click="$emit('btn-click')")
     .col
       w-card
-        q-img(:src="imgSrc")
+        w-img(:src="imgSrc")
         w-card-section
           .text-page-title {{title}}
         w-card-section
