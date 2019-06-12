@@ -23,11 +23,17 @@ export default Vue.extend({
     suffix: String,
 
     color: String,
-    bgColor: String,
+    bgColor: {
+      type: String,
+      default: 'white'
+    },
     dark: Boolean,
 
     filled: Boolean,
-    outlined: Boolean,
+    outlined: {
+      type: Boolean,
+      default: true
+    },
     borderless: Boolean,
     standout: [Boolean, String],
 
