@@ -6,6 +6,7 @@ import WStepper from "./components/elements/stepper/WStepper";
 
 // Patterns
 import WActionCard from "./components/patterns/card/WActionCard";
+import WDetailCard from "./components/patterns/card/WDetailCard";
 import WCollapsible from "./components/patterns/collapsible/WCollapsible";
 import WInfoCard from "./components/patterns/card/WInfoCard";
 import WDialog from "./components/patterns/dialog/WDialog";
@@ -28,6 +29,7 @@ function install(Vue) {
 
   // Patterns
   Vue.component("WActionCard", WActionCard);
+  Vue.component("WDetailCard", WDetailCard);
   Vue.component("WInfoCard", WInfoCard);
   Vue.component("WCollapsible", WCollapsible);
   Vue.component("WDialog", WDialog);
