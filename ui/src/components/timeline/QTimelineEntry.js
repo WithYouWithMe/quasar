@@ -47,6 +47,14 @@ export default Vue.extend({
 
     reverse () {
       return this.__timeline.layout === 'comfortable' && this.__timeline.side === 'left'
+    },
+
+    hasTitle () {
+      return this.$scopedSlots.title !== void 0 || this.title
+    },
+
+    hasSubtitle () {
+      return this.$scopedSlots.subtitle !== void 0 || this.subtitle
     }
   },
 
@@ -96,14 +104,15 @@ export default Vue.extend({
     }
 
     const content = [
-      h('div', { staticClass: 'q-timeline__subtitle' }, [
-        h(
-          'span',
-          this.$scopedSlots.subtitle !== void 0
-            ? this.$scopedSlots.subtitle()
-            : [ this.subtitle ]
-        )
-      ]),
+      ...(this.hasSubtitle ? [
+        h('div', { staticClass: 'q-timeline__subtitle' }, [
+          h(
+            'span',
+            this.$scopedSlots.subtitle !== void 0
+              ? this.$scopedSlots.subtitle()
+              : [ this.subtitle ]
+          )
+        ])] : []),
 
       h('div', {
         staticClass: 'q-timeline__dot',
@@ -111,13 +120,13 @@ export default Vue.extend({
       }, dot),
 
       h('div', { staticClass: 'q-timeline__content' }, [
-        h(
+        ...(this.hasTitle ? [h(
           'h6',
           { staticClass: 'q-timeline__title' },
           this.$scopedSlots.title !== void 0
             ? this.$scopedSlots.title()
             : [ this.title ]
-        )
+        )] : [])
       ].concat(defSlot))
     ]
 

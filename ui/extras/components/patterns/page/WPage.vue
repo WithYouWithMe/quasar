@@ -2,9 +2,10 @@
   q-page.w-page.row.col-12.items-start(:padding="padding")
     .row.col-12(:class="{ 'offset-md-2': offset, 'col-md-8': offset }")
       .row.col-12.justify-between.items-end
-        .text-page-title {{title}}
-        slot(name="title-right")
-          w-space
+        .text-page-title.no-wrap {{title}}
+        .row
+          slot(name="title-right")
+            w-space
       .full-width
         slot
     w-page-scroller(position="bottom-right" :scroll-offset="150" :offset="[18, 18]")
