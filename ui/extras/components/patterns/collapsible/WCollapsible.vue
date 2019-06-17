@@ -1,5 +1,5 @@
 <template lang="pug">
-  w-expansion-item.border.rounded-borders(v-model="showing" :header-class="headerClass")
+  w-expansion-item.border.rounded-borders(v-model="showing" :header-class="headerClass" v-bubble.show.hide)
     template(v-slot:header)
       w-item-section(side)
         w-icon(:name="iconName" :color="iconColor")
@@ -11,22 +11,24 @@
     w-card
       w-card-section
         slot
+        slot(name="buttons")
 </template>
 
 <script>
 import { WExpansionItem } from "quasar";
+import messageBus from "../../../mixins/messageBus";
 
 export default {
   name: "WCollapsible",
-  mixins: [ WExpansionItem ],
+  mixins: [ WExpansionItem, messageBus ],
   props: {
     label: {
       type: String,
-      default: () => false,
+      default: false,
     },
     completed: {
       type: Boolean,
-      default: () => false,
+      default: undefined,
     },
     icon: {
       type: String,
@@ -40,16 +42,26 @@ export default {
   data() {
     return {
       showing: false,
+      isCompleted: this.completed,
     };
+  },
+  mounted() {
+    if (this.messageBus) {
+      this.messageBus.$on("validated", value => {
+        this.isCompleted = value;
+      });
+    }
   },
   computed: {
     iconName() {
       let result;
 
       if (this.showing) {
-        result = "mdi-pencil-outline";
-      } else if (this.completed) {
-        result = "mdi-check-circle";
+        result = "ao-pen";
+      } else if (this.isCompleted === true) {
+        result = "ao-check-filled";
+      } else if (this.isCompleted === false) {
+        result = "ao-exclamation-circle-filled";
       } else {
         result = this.icon;
       }
@@ -61,8 +73,10 @@ export default {
 
       if (this.showing) {
         result = "grey-8";
-      } else if (this.completed) {
+      } else if (this.isCompleted === true) {
         result = "positive";
+      } else if (this.isCompleted === false) {
+        result = "negative";
       } else {
         result = "";
       }
