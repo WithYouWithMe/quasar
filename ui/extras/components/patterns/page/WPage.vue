@@ -7,7 +7,8 @@
           .row.no-wrap
             slot(name="title-right")
               w-space
-        .row.q-gutter-md.q-mt-md.full-width
+          slot(name="action-btn")
+        .row.q-col-gutter-md.q-mt-md.full-width
           .col-xs-12.col-sm-auto(v-if="details")
             w-info-card(:details="details")
               template(v-slot:actions)
@@ -23,6 +24,7 @@
               w-card-section.relative-position.content
                 slot
                 w-inner-loading(:showing="loading")
+        slot(name="action-btn")
     w-page-scroller(position="bottom-right" :scroll-offset="150" :offset="[18, 18]")
       w-btn(fab icon="ao-arrow-circle-up" color="accent")
 </template>
