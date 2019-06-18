@@ -6,7 +6,7 @@
           slot(name="header")
             .text-h6.text-bold {{title}}
         w-btn.text-grey-10.absolute.w-dialog-close-button(v-close-popup round dense color="white" size="lg")
-          w-icon(name="mdi-close" style="font-size: 1.4rem;")
+          w-icon(name="ao-times" style="font-size: 1.4rem;")
       w-card-section
         slot(name="body")
       w-card-section

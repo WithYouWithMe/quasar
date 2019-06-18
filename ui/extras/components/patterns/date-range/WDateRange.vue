@@ -2,19 +2,19 @@
   w-field.w-date-range
     .row.text-input.items-center {{dateRangeString}}
     template(v-slot:append)
-      w-icon(name="mdi-calendar")
+      w-icon(name="ao-calender")
         w-popup-proxy(ref="qDateProxy" transition-show="scale" transition-hide="scale")
           w-card.w-date-range-popup
             w-card-section.non-selectable
               .row.justify-between.items-center
                 .text-subtitle1.text-bold {{dateRangeString}}
-                w-btn(flat round dense icon="mdi-close" v-close-popup)
+                w-btn(flat round dense icon="ao-times" v-close-popup)
               .row.q-gutter-md
                 .column.col.calendar-month.q-pt-md
                   .row.items-center.justify-between
-                    w-btn(flat round dense icon="mdi-arrow-left" @click="goPrevMonth()")
+                    w-btn(flat round dense icon="ao-arrow-left" @click="goPrevMonth()")
                     .text-body2 {{monthsLocale[activeMonthStart] +' '+ activeYearStart}}
-                    w-btn.lt-md(flat round dense icon="mdi-arrow-right" @click="goNextMonth()")
+                    w-btn.lt-md(flat round dense icon="ao-arrow-right" @click="goNextMonth()")
                     .gt-sm
                   .row
                     .text-body2.calendar-column(v-for="item in shortDaysLocale" :key="item") {{item}}
@@ -25,7 +25,7 @@
                   .row.items-center.justify-between
                     div
                     .text-body2 {{monthsLocale[startNextActiveMonth] +' '+ activeYearEnd}}
-                    w-btn(flat round dense icon="mdi-arrow-right" @click="goNextMonth()")
+                    w-btn(flat round dense icon="ao-arrow-right" @click="goNextMonth()")
                   .row
                     .text-body2.calendar-column(v-for="item in shortDaysLocale" :key="item") {{item}}
                   .col

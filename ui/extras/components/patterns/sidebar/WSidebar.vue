@@ -3,7 +3,7 @@
     w-card.w-sidebar-content.full-height(:style="style")
       w-card-section.row.items-center.justify-between
         .text-h6 {{title}}
-        w-btn(icon="mdi-close" flat round dense v-close-popup)
+        w-btn(icon="ao-times" flat round dense v-close-popup)
       w-card-section
         slot
 </template>
@@ -16,7 +16,7 @@ export default {
   props: {
     value: {
       type: Boolean,
-      default: () => false,
+      default: false,
     },
     title: {
       type: String,

@@ -1,6 +1,7 @@
 export default {
   elements: [
     { name: "WLogotype", friendlyName: "Logotype", standalone: true },
+    { name: "WSearchInput", friendlyName: "Search input", standalone: true },
     { name: "WStepper", friendlyName: "Stepper", standalone: true },
   ],
   patterns: [
@@ -15,6 +16,5 @@ export default {
     { name: "WSidebar", friendlyName: "Sidebar", standalone: true },
   ],
   templates: [
-    { name: "WListTemplate", friendlyName: "List page template", standalone: true },
   ],
 };

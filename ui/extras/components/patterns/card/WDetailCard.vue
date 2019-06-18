@@ -1,17 +1,11 @@
 <template lang="pug">
-  .row.q-gutter-md
-    .col-xs-12.col-sm-auto
-      w-info-card(:details="details")
-        template(v-slot:actions)
-          w-btn.full-width(:label="buttonLabel" icon-right="mdi-check" color="primary" @click="$emit('btn-click')")
-    .col
-      w-card
-        w-img(:src="imgSrc")
-        w-card-section
-          .text-page-title {{title}}
-        w-card-section
-          slot(name="description")
-            div {{description}}
+  div
+    w-img(:src="imgSrc")
+    w-card-section
+      .text-page-title {{title}}
+    w-card-section
+      slot(name="description")
+        div {{description}}
 </template>
 
 <script>
@@ -20,7 +14,7 @@ export default {
     details: {
       type: Array,
       required: true,
-      default: () => null,
+      default: null,
     },
     title: {
       type: String,
@@ -34,10 +28,6 @@ export default {
     imgSrc: {
       type: String,
       default: null,
-    },
-    buttonLabel: {
-      type: String,
-      required: true,
     },
   },
 };

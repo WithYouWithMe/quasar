@@ -2,6 +2,7 @@ import Bubble from "./directives/bubble";
 
 // Elements
 import WLogotype from "./components/elements/logotype/WLogotype";
+import WSearchInput from "./components/elements/WSearchInput";
 import WStepper from "./components/elements/stepper/WStepper";
 
 // Patterns
@@ -16,7 +17,6 @@ import WPage from "./components/patterns/page/WPage";
 import WSidebar from "./components/patterns/sidebar/WSidebar";
 
 // Templates
-import WListTemplate from "./components/templates/list-template/WListTemplate";
 
 function install(Vue) {
   if (install.installed) return;
@@ -26,6 +26,7 @@ function install(Vue) {
 
   // Elements
   Vue.component("WLogotype", WLogotype);
+  Vue.component("WSearchInput", WSearchInput);
   Vue.component("WStepper", WStepper);
 
   // Patterns
@@ -40,7 +41,6 @@ function install(Vue) {
   Vue.component("WSidebar", WSidebar);
 
   // Templates
-  Vue.component("WListTemplate", WListTemplate);
 }
 
 // Create module definitionА for Vue.use()
