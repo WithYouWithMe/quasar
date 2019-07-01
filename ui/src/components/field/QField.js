@@ -16,7 +16,10 @@ export default Vue.extend({
 
   props: {
     label: String,
-    stackLabel: Boolean,
+    stackLabel: {
+      type: Boolean,
+      default: true
+    },
     hint: String,
     hideHint: Boolean,
     prefix: String,
