@@ -128,7 +128,6 @@ export default Vue.extend({
         [this.fieldClass]: this.fieldClass !== void 0,
 
         [`q-field--${this.styleType}`]: true,
-        'q-field__has-control': this.$scopedSlots.control !== void 0,
         'q-field--rounded': this.rounded,
         'q-field--square': this.square,
 
@@ -298,11 +297,11 @@ export default Vue.extend({
         )
       }
 
-      // this.label !== void 0 && node.push(
-      //   h('div', {
-      //     staticClass: 'q-field__label no-pointer-events absolute ellipsis'
-      //   }, [ this.label ])
-      // )
+      this.label !== void 0 && node.push(
+        h('div', {
+          staticClass: 'q-field__label no-pointer-events absolute ellipsis'
+        }, [ this.label ])
+      )
 
       this.suffix !== void 0 && this.suffix !== null && node.push(
         h('div', {
@@ -438,9 +437,6 @@ export default Vue.extend({
       h('div', {
         staticClass: 'q-field__inner relative-position col self-stretch column justify-center'
       }, [
-        h('div', {
-          staticClass: 'q-field__external-label no-pointer-events'
-        }, [ this.label ]),
         h('div', {
           ref: 'control',
           staticClass: 'q-field__control relative-position row no-wrap',
