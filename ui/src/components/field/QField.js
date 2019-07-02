@@ -153,7 +153,7 @@ export default Vue.extend({
     styleType () {
       if (this.filled === true) { return 'filled' }
       if (this.outlined === true && this.$scopedSlots.control === void 0) { return 'outlined' }
-      if (this.borderless === true) { return 'borderless' }
+      if (this.borderless === true || this.$scopedSlots.control !== void 0) { return 'borderless' }
       if (this.standout) { return 'standout' }
       return 'standard'
     },
