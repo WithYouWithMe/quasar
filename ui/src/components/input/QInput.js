@@ -76,7 +76,7 @@ export default Vue.extend({
         this.$nextTick(this.__adjustHeightDebounce)
       }
       // if it has a number of rows set respect it
-      else if (this.$attrs.rows > 0) {
+      else if (this.$attrs.rows > 0 && this.$refs.input !== void 0) {
         const inp = this.$refs.input
         inp.style.height = 'auto'
       }
@@ -100,11 +100,11 @@ export default Vue.extend({
 
   methods: {
     focus () {
-      this.$refs.input.focus()
+      this.$refs.input !== void 0 && this.$refs.input !== document.activeElement && document.activeElement.id !== this.targetUid && this.$refs.input.focus()
     },
 
     select () {
-      this.$refs.input.select()
+      this.$refs.input !== void 0 && this.$refs.input.select()
     },
 
     __onInput (e) {
@@ -164,12 +164,20 @@ export default Vue.extend({
     // textarea only
     __adjustHeight () {
       const inp = this.$refs.input
-      inp.style.height = '1px'
-      inp.style.height = inp.scrollHeight + 'px'
+      if (inp !== void 0) {
+        inp.style.height = '1px'
+        inp.style.height = inp.scrollHeight + 'px'
+      }
     },
 
     __onCompositionStart (e) {
       e.target.composing = true
+    },
+
+    __onCompositionUpdate (e) {
+      if (typeof e.data === 'string' && e.data.codePointAt(0) < 256) {
+        e.target.composing = false
+      }
     },
 
     __onCompositionEnd (e) {
@@ -195,8 +203,12 @@ export default Vue.extend({
         change: this.__onChange,
         compositionstart: this.__onCompositionStart,
         compositionend: this.__onCompositionEnd,
-        focus: stop,
-        blur: stop
+        blur: stop,
+        focus: stop
+      }
+
+      if (this.$q.platform.is.android === true) {
+        on.compositionupdate = this.__onCompositionUpdate
       }
 
       if (this.hasMask === true) {
@@ -209,9 +221,11 @@ export default Vue.extend({
         rows: this.type === 'textarea' ? 6 : void 0,
         'aria-label': this.label,
         ...this.$attrs,
+        id: this.targetUid,
         type: this.type,
         maxlength: this.maxlength,
-        disabled: this.editable !== true
+        disabled: this.disable === true,
+        readonly: this.readonly === true
       }
 
       if (this.autogrow === true) {
