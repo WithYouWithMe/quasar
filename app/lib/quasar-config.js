@@ -12,7 +12,8 @@ const
   warn = logger('app:quasar-conf', 'red'),
   appFilesValidations = require('./app-files-validations'),
   extensionRunner = require('./app-extension/extensions-runner'),
-  supportIE = require('./helpers/support-ie')
+  supportIE = require('./helpers/support-ie'),
+  cssVariables = require('./helpers/css-variables')
 
 function encode (obj) {
   return JSON.stringify(obj, (key, value) => {
@@ -24,7 +25,7 @@ function encode (obj) {
 
 function formatPublicPath (path) {
   if (!path) {
-    return path
+    return ''
   }
 
   if (!path.endsWith('/')) {
@@ -359,6 +360,9 @@ class QuasarConfig {
       cfg.extras = cfg.extras.filter(uniqueFilter)
     }
 
+    if (cfg.framework.all !== true && cfg.framework.all !== 'auto') {
+      cfg.framework.all = false
+    }
     cfg.framework.components = cfg.framework.components.filter(uniqueFilter)
     cfg.framework.directives = cfg.framework.directives.filter(uniqueFilter)
     cfg.framework.plugins = cfg.framework.plugins.filter(uniqueFilter)
@@ -376,6 +380,7 @@ class QuasarConfig {
       webpackManifest: this.ctx.prod,
       vueRouterMode: 'hash',
       preloadChunks: true,
+      forceDevPublicPath: false,
       // transpileDependencies: [], // leaving here for completeness
       devtool: this.ctx.dev
         ? '#cheap-module-eval-source-map'
@@ -428,8 +433,8 @@ class QuasarConfig {
 
     cfg.build.transpileDependencies = cfg.build.transpileDependencies.filter(uniqueRegexFilter)
 
-    cfg.__loadingBar = cfg.framework.all || cfg.framework.plugins.includes('LoadingBar')
-    cfg.__meta = cfg.framework.all || cfg.framework.plugins.includes('Meta')
+    cfg.__loadingBar = cfg.framework.all === true || cfg.framework.plugins.includes('LoadingBar')
+    cfg.__meta = cfg.framework.all === true || cfg.framework.plugins.includes('Meta')
 
     if (this.ctx.dev || this.ctx.debug) {
       Object.assign(cfg.build, {
@@ -474,15 +479,11 @@ class QuasarConfig {
     }
 
     cfg.build.publicPath =
-      this.ctx.prod && cfg.build.publicPath && ['spa', 'pwa'].includes(this.ctx.modeName)
+      (this.ctx.prod || cfg.build.forceDevPublicPath) && cfg.build.publicPath && ['spa', 'pwa'].includes(this.ctx.modeName)
         ? formatPublicPath(cfg.build.publicPath)
-        : (cfg.build.vueRouterMode !== 'hash' ? '/' : '')
+        : (cfg.build.vueRouterMode === 'hash' ? '' : '/')
 
     cfg.build.vueRouterBase = formatRouterBase(cfg.build.publicPath)
-
-    cfg.build.appBase = cfg.build.vueRouterMode === 'history'
-      ? cfg.build.publicPath
-      : ''
 
     cfg.sourceFiles = merge({
       rootComponent: 'src/App.vue',
@@ -538,6 +539,8 @@ class QuasarConfig {
     }
 
     if (this.ctx.dev) {
+      const originalBefore = cfg.devServer.before
+
       cfg.devServer = merge({
         publicPath: cfg.build.publicPath,
         hot: true,
@@ -550,24 +553,33 @@ class QuasarConfig {
         compress: true,
         open: true
       }, cfg.devServer, {
-        contentBase: [ appPaths.srcDir ]
+        contentBase: false,
+        watchContentBase: false,
+
+        before: app => {
+          if (!this.ctx.mode.ssr) {
+            const express = require('express')
+
+            app.use((cfg.build.publicPath || '/') + 'statics', express.static(appPaths.resolve.src('statics'), {
+              maxAge: 0
+            }))
+
+            if (this.ctx.mode.cordova) {
+              const folder = appPaths.resolve.cordova(`platforms/${this.ctx.targetName}/platform_www`)
+              app.use('/', express.static(folder, { maxAge: 0 }))
+            }
+          }
+
+          originalBefore && originalBefore(app)
+        }
       })
 
-      if (this.ctx.mode.ssr) {
-        cfg.devServer.contentBase = false
-      }
-      else if (this.ctx.mode.cordova || this.ctx.mode.electron) {
+      if (this.ctx.mode.cordova || this.ctx.mode.electron) {
         cfg.devServer.open = false
 
         if (this.ctx.mode.electron) {
           cfg.devServer.https = false
         }
-      }
-
-      if (this.ctx.mode.cordova) {
-        cfg.devServer.contentBase.push(
-          appPaths.resolve.cordova(`platforms/${this.ctx.targetName}/platform_www`)
-        )
       }
 
       if (cfg.devServer.open) {
@@ -681,8 +693,12 @@ class QuasarConfig {
       const host = cfg.devServer.host === '0.0.0.0'
         ? 'localhost'
         : cfg.devServer.host
-      const urlPath = `${cfg.build.vueRouterMode === 'hash' ? (cfg.build.htmlFilename !== 'index.html' ? cfg.build.htmlFilename : '') : ''}`
-      cfg.build.APP_URL = `http${cfg.devServer.https ? 's' : ''}://${host}:${cfg.devServer.port}/${urlPath}`
+
+      const urlPath = cfg.build.vueRouterMode === 'hash'
+        ? (cfg.build.htmlFilename !== 'index.html' ? (cfg.build.publicPath ? '' : '/') + cfg.build.htmlFilename : '')
+        : ''
+
+      cfg.build.APP_URL = `http${cfg.devServer.https ? 's' : ''}://${host}:${cfg.devServer.port}${cfg.build.publicPath}${urlPath}`
     }
     else if (this.ctx.mode.cordova) {
       cfg.build.APP_URL = 'index.html'
@@ -705,13 +721,8 @@ class QuasarConfig {
       'process.env': cfg.build.env
     }
 
-    if (this.ctx.mode.electron) {
-      if (this.ctx.dev) {
-        cfg.build.env.__statics = `"${appPaths.resolve.src('statics').replace(/\\/g, '\\\\')}"`
-      }
-    }
-    else {
-      cfg.build.env.__statics = `"${this.ctx.dev ? '/' : cfg.build.publicPath || '/'}statics"`
+    if (this.ctx.mode.electron && this.ctx.dev) {
+      cfg.build.env.__statics = `"${appPaths.resolve.src('statics').replace(/\\/g, '\\\\')}"`
     }
 
     appFilesValidations(cfg)
@@ -812,7 +823,12 @@ class QuasarConfig {
           // more options:
           // https://github.com/kangax/html-minifier#options-quick-reference
         }
-        : undefined
+        : void 0
+    }
+
+    // used by .quasar entry templates
+    cfg.__css = {
+      quasarSrcExt: cssVariables.quasarSrcExt
     }
 
     this.webpackConfig = await require('./webpack')(cfg)

@@ -31,6 +31,7 @@ const gettingStarted = [
   },
   {
     name: 'Release notes',
+    badge: 'updated',
     path: 'release-notes'
   },
   {
@@ -155,6 +156,11 @@ const cli = [
       {
         name: 'Commands List',
         path: 'commands-list'
+      },
+      {
+        name: 'CSS Preprocessors',
+        badge: 'new',
+        path: 'css-preprocessors'
       },
       {
         name: 'Routing',
@@ -409,8 +415,8 @@ const style = [
   },
   {
     name: 'Theme Builder',
-    path: 'theme-builder',
-    badge: 'new'
+    badge: 'new',
+    path: 'theme-builder'
   },
   {
     name: 'Spacing',
@@ -431,6 +437,11 @@ const style = [
   {
     name: 'Positioning',
     path: 'positioning'
+  },
+  {
+    name: 'Sass/SCSS Variables',
+    badge: 'new',
+    path: 'sass-scss-variables'
   },
   {
     name: 'Stylus Variables',
@@ -935,32 +946,27 @@ const appExtensions = [
     children: [
       {
         name: 'Introduction',
-        badge: 'new',
         path: 'introduction'
       },
       {
         name: 'Provide a UI component',
-        badge: 'new',
         path: 'provide-a-ui-component'
       },
       {
         name: 'Provide a directive',
-        badge: 'new',
         path: 'provide-a-directive'
       },
       {
         name: 'Inject Quasar Plugin',
-        badge: 'new',
         path: 'inject-quasar-plugin'
       },
-      /* {
+      {
         name: 'Starter kit equivalent',
         badge: 'new',
         path: 'starter-kit-equivalent'
-      }, */
+      },
       {
         name: 'Chain Webpack',
-        badge: 'new',
         path: 'chain-webpack'
       }
     ]
