@@ -848,7 +848,7 @@ export default Vue.extend({
           focusout(e)
         },
         click: e => {
-          // label from QField will propagate click on the input (except IE)
+          // label from WField will propagate click on the input (except IE)
           if (
             this.hasDialog !== true &&
             this.useInput === true &&

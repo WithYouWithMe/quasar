@@ -1,13 +1,13 @@
 import Vue from 'vue'
 
-import QList from '../list/QList.js'
-import QMarkupTable from '../table/QMarkupTable.js'
+import WList from '../list/QList.js'
+import WMarkupTable from '../table/QMarkupTable.js'
 import VirtualScroll from '../../mixins/virtual-scroll.js'
 
 import { listenOpts } from '../../utils/event.js'
 
 export default Vue.extend({
-  name: 'QVirtualScroll',
+  name: 'WVirtualScroll',
 
   mixins: [ VirtualScroll ],
 
@@ -132,7 +132,7 @@ export default Vue.extend({
 
   render (h) {
     if (this.$scopedSlots.default === void 0) {
-      console.error(`QVirtualScroll: default scoped slot is required for rendering`, this)
+      console.error(`WVirtualScroll: default scoped slot is required for rendering`, this)
       return
     }
 
@@ -149,7 +149,7 @@ export default Vue.extend({
       child = child.concat(this.$scopedSlots.after())
     }
 
-    return h(this.type === 'list' ? QList : QMarkupTable, {
+    return h(this.type === 'list' ? WList : WMarkupTable, {
       class: this.classes,
       attrs: this.attrs,
       props: this.$attrs,

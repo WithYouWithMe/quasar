@@ -1,5 +1,5 @@
-import QVirtualScroll from './QVirtualScroll.js'
+import WVirtualScroll from './QVirtualScroll.js'
 
 export {
-  QVirtualScroll
+  WVirtualScroll
 }
