@@ -1,5 +1,5 @@
 {
-  "name": "quasar",
+  "name": "@withyouwithme/quasar",
   "version": "1.1.4",
   "description": "Build high-performance VueJS user interfaces (SPA, PWA, SSR, Mobile and Desktop) in record time",
   "module": "src/index.esm.js",
@@ -27,7 +27,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/quasarframework/quasar.git"
+    "url": "git+https://github.com/WithYouWithMe/quasar.git"
   },
   "keywords": [
     "vuejs",
