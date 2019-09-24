@@ -65,9 +65,6 @@ export default Vue.extend({
       else if (icon.startsWith('ti-') === true) {
         cls = `themify-icon ${icon}`
       }
-      else if (icon.startsWith('ao-') === true) {
-        cls = `ao ${icon}`
-      }
       else {
         cls = 'material-icons'
 
