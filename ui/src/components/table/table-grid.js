@@ -47,33 +47,10 @@ export default {
           ])
         }
 
-<<<<<<< HEAD
-      return [
-        this.hideHeader === false
-          ? h('div', { staticClass: 'q-table__middle' }, [
-            this.loading === true
-              ? h(WLinearProgress, {
-                staticClass: 'q-table__linear-progress',
-                props: {
-                  color: this.color,
-                  dark: this.dark,
-                  indeterminate: true
-                }
-              })
-              : null
-          ])
-          : null,
-
-        h('div', { staticClass: 'row' }, this.computedRows.map(row => {
-          const
-            key = row[this.rowKey],
-            selected = this.isRowSelected(key)
-=======
       return h('div', { staticClass: 'row' }, this.computedRows.map(row => {
         const
           key = row[this.rowKey],
           selected = this.isRowSelected(key)
->>>>>>> 378aae54763aa4825716a409a657bed1c74c3ce7
 
         return item(this.addBodyRowMeta({
           key,
@@ -92,7 +69,7 @@ export default {
             this.getTableHeader(h)
           ])
           : (this.loading === true
-            ? h(QLinearProgress, {
+            ? h(WLinearProgress, {
               staticClass: 'q-table__linear-progress',
               props: {
                 color: this.color,
