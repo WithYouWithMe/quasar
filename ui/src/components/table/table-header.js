@@ -9,8 +9,13 @@ export default {
 
       this.loading === true && child.push(
         h('tr', { staticClass: 'q-table__progress' }, [
+<<<<<<< HEAD
           h('td', { staticClass: 'relative-position', attrs: { colspan: '100%' } }, [
             h(WLinearProgress, {
+=======
+          h('th', { staticClass: 'relative-position', attrs: { colspan: '100%' } }, [
+            h(QLinearProgress, {
+>>>>>>> 378aae54763aa4825716a409a657bed1c74c3ce7
               staticClass: 'q-table__linear-progress',
               props: {
                 color: this.color,
