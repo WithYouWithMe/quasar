@@ -13,7 +13,7 @@ const
 module.exports = function (cfg, configName) {
   const
     chain = new WebpackChain(),
-    needsHash = !cfg.ctx.dev && !['electron', 'cordova'].includes(cfg.ctx.modeName),
+    needsHash = !cfg.ctx.dev && !['electron', 'cordova', 'capacitor'].includes(cfg.ctx.modeName),
     fileHash = needsHash ? '.[hash:8]' : '',
     chunkHash = needsHash ? '.[contenthash:8]' : '',
     resolveModules = [
@@ -298,6 +298,8 @@ module.exports = function (cfg, configName) {
     if (cfg.ctx.debug) {
       // reset default webpack 4 minimizer
       chain.optimization.minimizers.delete('js')
+      // also:
+      chain.optimization.minimize(false)
     }
     else if (cfg.build.minify) {
       const TerserPlugin = require('terser-webpack-plugin')

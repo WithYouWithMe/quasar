@@ -21,14 +21,13 @@ export default Vue.extend({
 
     debounce: [String, Number],
 
-    maxlength: [Number, String],
     autogrow: Boolean, // makes a textarea
 
     inputClass: [Array, String, Object],
     inputStyle: [Array, String, Object],
     outlined: {
       type: Boolean,
-      default: true
+      default: !this.readonly
     },
     stackLabel: {
       type: Boolean,
@@ -179,8 +178,15 @@ export default Vue.extend({
     __adjustHeight () {
       const inp = this.$refs.input
       if (inp !== void 0) {
+        const parentStyle = inp.parentNode.style
+
+        // reset height of textarea to a small size to detect the real height
+        // but keep the total control size the same
+        parentStyle.marginBottom = (inp.scrollHeight - 1) + 'px'
         inp.style.height = '1px'
+
         inp.style.height = inp.scrollHeight + 'px'
+        parentStyle.marginBottom = ''
       }
     },
 
