@@ -78,8 +78,15 @@ export default Vue.extend({
     inputClass: [Array, String, Object],
     inputStyle: [Array, String, Object],
 
-    transitionShow: String,
-    transitionHide: String,
+    transitionShow: {
+      type: String,
+      default: 'jump-up'
+    },
+
+    transitionHide: {
+      type: String,
+      default: 'jump-up'
+    },
 
     behavior: {
       type: String,

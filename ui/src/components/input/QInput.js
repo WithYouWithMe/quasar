@@ -27,7 +27,7 @@ export default Vue.extend({
     inputStyle: [Array, String, Object],
     outlined: {
       type: Boolean,
-      default: () => !this.readonly
+      default: true
     },
     stackLabel: {
       type: Boolean,
