@@ -43,7 +43,11 @@ export default Vue.extend({
 
     size: String,
 
-    noCaps: Boolean,
+    noCaps: {
+      type: Boolean,
+      default: true
+    },
+
     noWrap: Boolean,
     dense: Boolean,
     readonly: Boolean,
