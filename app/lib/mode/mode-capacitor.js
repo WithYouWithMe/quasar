@@ -1,6 +1,6 @@
-const
-  fs = require('fs'),
-  fse = require('fs-extra')
+const fs = require('fs')
+const fse = require('fs-extra')
+const compileTemplate = require('lodash.template')
 
 const
   appPaths = require('../app-paths'),
@@ -10,14 +10,30 @@ const
   { spawnSync } = require('../helpers/spawn'),
   nodePackager = require('../helpers/node-packager')
 
-const capacitorDeps = require('../capacitor/capacitor-deps')
+function installDependencies () {
+  if (fs.existsSync(appPaths.resolve.capacitor('node_modules'))) {
+    return
+  }
+
+  const cmdParam = nodePackager === 'npm'
+    ? ['install']
+    : []
+
+  log(`Installing Capacitor dependencies...`)
+  spawnSync(
+    nodePackager,
+    cmdParam,
+    { cwd: appPaths.capacitorDir },
+    () => warn('Failed to install Capacitor dependencies')
+  )
+}
 
 class Mode {
-  get isInstalled() {
+  get isInstalled () {
     return fs.existsSync(appPaths.capacitorDir)
   }
 
-  add() {
+  add (target) {
     if (this.isInstalled) {
       warn(`Capacitor support detected already. Aborting.`)
       return
@@ -36,48 +52,29 @@ class Mode {
       return
     }
 
-    const cmdParam = nodePackager === 'npm'
-      ? ['install', '--save-dev']
-      : ['add', '--dev']
-
-    log(`Installing Capacitor dependencies...`)
-    spawnSync(
-      nodePackager,
-      cmdParam.concat(
-        Object.keys(capacitorDeps).map(dep => {
-          return `${dep}@${capacitorDeps[dep]}`
-        })
-      ),
-      appPaths.appDir,
-      () => warn('Failed to install Capacitor dependencies')
-    )
-
     log(`Creating Capacitor source folder...`)
 
-    // Need these otherwise Capacitor CLI will fail
-    fse.copySync(
-      appPaths.resolve.cli('templates/capacitor'),
-      appPaths.capacitorDir
-    )
+    // Create /src-capacitor from template
+    fse.ensureDirSync(appPaths.capacitorDir)
 
-    // update npmClient in capacitor config
-    const capJsonPath = appPaths.resolve.capacitor('capacitor.config.json')
-    const capJson = require(capJsonPath)
-    capJson.npmClient = nodePackager
-    if (pkg.capacitorId) {
-      capJson.appId = pkg.capacitorId
+    const fglob = require('fast-glob')
+    const scope = {
+      appName,
+      appId: pkg.capacitorId || pkg.cordovaId || 'org.quasar.capacitor.app',
+      pkg,
+      nodePackager
     }
-    else if (pkg.cordovaId) {
-      capJson.appId = pkg.cordovaId
-    }
-    if (pkg.productName) {
-      capJson.appName = pkg.productName
-    }
-    fs.writeFileSync(capJsonPath, JSON.stringify(capJson, null, 2), 'utf-8')
 
-    // Copy package.json to prevent capacitor from reinstalling deps
-    const updateCapPkg = require('../capacitor/update-cap-pkg')
-    updateCapPkg()
+    fglob.sync(['**/*'], {
+      cwd: appPaths.resolve.cli('templates/capacitor')
+    }).forEach(filePath => {
+      const dest = appPaths.resolve.capacitor(filePath)
+      const content = fs.readFileSync(appPaths.resolve.cli('templates/capacitor/' + filePath))
+      fse.ensureFileSync(dest)
+      fs.writeFileSync(dest, compileTemplate(content)(scope), 'utf-8')
+    })
+
+    installDependencies()
 
     const capacitorCliPath = require('../capacitor/capacitor-cli-path')
 
@@ -88,32 +85,42 @@ class Mode {
         'init',
         '--web-dir',
         'www',
-        appName,
-        pkg.capacitorId || pkg.cordovaId || 'org.quasar.capacitor.app'
+        scope.appName,
+        scope.appId
       ],
-      appPaths.capacitorDir
+      { cwd: appPaths.capacitorDir }
     )
-
-    ;['android', 'ios'].forEach(platform => {
-      spawnSync(
-        capacitorCliPath,
-        ['add', platform],
-        appPaths.capacitorDir
-      )
-    })
-
-    const androidManifestPath = appPaths.resolve.capacitor(
-      'android/app/src/main/AndroidManifest.xml'
-    )
-    // Enable cleartext support in manifest
-    let androidManifest = fse.readFileSync(androidManifestPath, 'utf8')
-    androidManifest = androidManifest.replace(
-      '<application',
-      '<application\n        android:usesCleartextTraffic="true"'
-    )
-    fse.writeFileSync(androidManifestPath, androidManifest)
 
     log(`Capacitor support was added`)
+
+    if (!target) {
+      console.log()
+      console.log(` No Capacitor platform has been added yet as these get installed on demand automatically when running "quasar dev" or "quasar build".`)
+      log()
+      return
+    }
+
+    this.addPlatform(target)
+  }
+
+  hasPlatform (target) {
+    return fs.existsSync(appPaths.resolve.capacitor(target))
+  }
+
+  addPlatform (target) {
+    if (this.hasPlatform(target)) {
+      installDependencies()
+      return
+    }
+
+    const capacitorCliPath = require('../capacitor/capacitor-cli-path')
+
+    log(`Adding Capacitor platform "${target}"`)
+    spawnSync(
+      capacitorCliPath,
+      ['add', target],
+      { cwd: appPaths.capacitorDir }
+    )
   }
 
   remove() {
@@ -122,20 +129,8 @@ class Mode {
       return
     }
 
-    log(`Removing Capacitor dir`)
+    log(`Removing Capacitor folder`)
     fse.removeSync(appPaths.capacitorDir)
-
-    const cmdParam = nodePackager === 'npm'
-      ? ['uninstall', '--save-dev']
-      : ['remove', '--dev']
-
-    log(`Removing Capacitor dependencies...`)
-    spawnSync(
-      nodePackager,
-      cmdParam.concat(Object.keys(capacitorDeps)),
-      appPaths.appDir,
-      () => warn('Failed to uninstall Capacitor dependencies')
-    )
 
     log(`Capacitor support was removed`)
   }
