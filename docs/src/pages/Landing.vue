@@ -13,10 +13,11 @@
             span rk
         .text-subtitle1.q-pl-sm Build high-performance <strong>VueJS</strong> user interfaces in record time
         .q-pt-md.q-pl-sm
-          .landing__hero-row.landing__hero-btns.q-gutter-md.row.items-center
-            q-btn(push, color="white", text-color="primary", to="/introduction-to-quasar", label="About")
-            q-btn(push, color="white", text-color="primary", to="/start", label="Docs")
-            q-btn(push, color="white", text-color="primary", to="/quasar-cli/installation", label="Install")
+          .landing__hero-row.landing__hero-btns.q-gutter-sm.row.items-center
+            q-btn(color="white", text-color="primary", to="/introduction-to-quasar", label="About")
+            q-btn(color="white", text-color="primary", to="/start", label="Docs")
+            q-btn(color="white", text-color="primary", to="/quasar-cli/installation", label="Install")
+            q-btn(color="white", text-color="black", to="/video-tutorials", label="Video Tutorials", icon-right="new_releases")
             .text-body2 v{{ $q.version }}
         .landing__arrow-down.row.justify-center.absolute
           q-icon.landing__arrow-down-icon.q-mt-xl(name="keyboard_arrow_down" size="50px")
@@ -28,7 +29,7 @@
         q-btn(color="primary", push, no-caps, no-wrap, icon-right="launch", label="SPA (Single Page App)", to="/quasar-cli/developing-spa/introduction")
         q-btn(color="teal", push, no-caps, no-wrap, icon-right="launch", label="PWA (Progressive Web App)", to="/quasar-cli/developing-pwa/introduction")
         q-btn(color="accent", push, no-caps, no-wrap, icon-right="launch", label="SSR (Server-side Rendered App)", to="/quasar-cli/developing-ssr/introduction")
-        q-btn(color="orange", push, no-caps, no-wrap, icon-right="launch", label="Hybrid Mobile App", to="/quasar-cli/developing-cordova-apps/introduction")
+        q-btn(color="orange", push, no-caps, no-wrap, icon-right="launch", label="Hybrid Mobile App", to="/quasar-cli/developing-mobile-apps")
         q-btn(color="indigo", push, no-caps, no-wrap, icon-right="launch", label="Multi-platform Desktop App", to="/quasar-cli/developing-electron-apps/introduction")
 
   section.padding.bg-white.text-grey-10.text-center

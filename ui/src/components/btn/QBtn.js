@@ -171,7 +171,7 @@ export default Vue.extend({
         this.$refs.blurTarget.focus()
       }
 
-      if (touchTarget === this.$el) {
+      if (touchTarget !== void 0 && touchTarget === this.$el) {
         touchTarget.removeEventListener('touchcancel', this.__onPressEnd, passiveCapture)
         touchTarget.removeEventListener('touchend', this.__onPressEnd, passiveCapture)
         touchTarget = void 0
@@ -200,7 +200,7 @@ export default Vue.extend({
     const
       inner = [].concat(slot(this, 'default')),
       data = {
-        staticClass: 'q-btn inline q-btn-item non-selectable',
+        staticClass: 'q-btn inline q-btn-item non-selectable no-outline',
         class: this.classes,
         style: this.style,
         attrs: this.attrs
@@ -214,7 +214,7 @@ export default Vue.extend({
         mousedown: this.__onMousedown
       }
 
-      if (Platform.has.touch === true) {
+      if (this.$q.platform.has.touch === true) {
         data.on.touchstart = this.__onTouchstart
       }
 
