@@ -60,7 +60,7 @@ export default Vue.extend({
           click: this.toggle
         }
       }, slot(this, 'tooltip', []).concat([
-        h(QIcon, {
+        h(WIcon, {
           staticClass: 'q-fab__icon absolute-full',
           props: { name: this.icon || this.$q.iconSet.fab.icon }
         }),

@@ -1,6 +1,6 @@
 import Vue from 'vue'
 
-import QBtn from '../btn/QBtn.js'
+import WBtn from '../btn/QBtn.js'
 import DateTimeMixin from '../../mixins/datetime.js'
 
 import slot from '../../utils/slot.js'

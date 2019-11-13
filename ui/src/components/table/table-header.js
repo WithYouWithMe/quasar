@@ -1,5 +1,5 @@
-import QCheckbox from '../checkbox/QCheckbox.js'
-import QTh from './QTh.js'
+import WCheckbox from '../checkbox/QCheckbox.js'
+import WTh from './QTh.js'
 
 export default {
   methods: {

@@ -1,5 +1,5 @@
-import QMarkupTable from './QMarkupTable.js'
+import WMarkupTable from './QMarkupTable.js'
 
 export {
-  QMarkupTable
+  WMarkupTable
 }

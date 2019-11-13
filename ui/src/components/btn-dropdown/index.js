@@ -1,5 +1,5 @@
-import QBtnDropdown from './QBtnDropdown.js'
+import WBtnDropdown from './QBtnDropdown.js'
 
 export {
-  QBtnDropdown
+  WBtnDropdown
 }

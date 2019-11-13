@@ -1,5 +1,5 @@
-import QExpansionItem from './QExpansionItem.js'
+import WExpansionItem from './QExpansionItem.js'
 
 export {
-  QExpansionItem
+  WExpansionItem
 }

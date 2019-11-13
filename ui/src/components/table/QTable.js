@@ -5,8 +5,8 @@ import TableHeader from './table-header.js'
 import TableBody from './table-body.js'
 import Bottom from './table-bottom.js'
 import TableGrid from './table-grid.js'
-import QVirtualScroll from '../virtual-scroll/QVirtualScroll.js'
-import QLinearProgress from '../linear-progress/QLinearProgress.js'
+import WVirtualScroll from '../virtual-scroll/QVirtualScroll.js'
+import WLinearProgress from '../linear-progress/QLinearProgress.js'
 
 import { commonVirtPropsList } from '../../mixins/virtual-scroll.js'
 import DarkMixin from '../../mixins/dark.js'
@@ -293,7 +293,7 @@ export default Vue.extend({
 
     __getProgress (h) {
       return [
-        h(QLinearProgress, {
+        h(WLinearProgress, {
           staticClass: 'q-table__linear-progress',
           props: {
             color: this.color,

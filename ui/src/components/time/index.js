@@ -1,5 +1,5 @@
-import QTime from './QTime.js'
+import WTime from './QTime.js'
 
 export {
-  QTime
+  WTime
 }

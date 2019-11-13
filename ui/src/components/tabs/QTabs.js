@@ -1,7 +1,7 @@
 import Vue from 'vue'
 
-import QIcon from '../icon/QIcon.js'
-import QResizeObserver from '../resize-observer/QResizeObserver.js'
+import WIcon from '../icon/QIcon.js'
+import WResizeObserver from '../resize-observer/QResizeObserver.js'
 import TimeoutMixin from '../../mixins/timeout.js'
 
 import { stop } from '../../utils/event.js'
@@ -378,7 +378,7 @@ export default Vue.extend({
 
   render (h) {
     const child = [
-      h(QResizeObserver, {
+      h(WResizeObserver, {
         on: { resize: this.__updateContainer }
       }),
 
@@ -390,7 +390,7 @@ export default Vue.extend({
     ]
 
     this.$q.platform.is.desktop === true && child.push(
-      h(QIcon, {
+      h(WIcon, {
         staticClass: 'q-tabs__arrow q-tabs__arrow--left absolute q-tab__icon',
         class: this.leftArrow === true ? '' : 'q-tabs__arrow--faded',
         props: { name: this.leftIcon || (this.vertical === true ? this.$q.iconSet.tabs.up : this.$q.iconSet.tabs.left) },
@@ -403,7 +403,7 @@ export default Vue.extend({
         }
       }),
 
-      h(QIcon, {
+      h(WIcon, {
         staticClass: 'q-tabs__arrow q-tabs__arrow--right absolute q-tab__icon',
         class: this.rightArrow === true ? '' : 'q-tabs__arrow--faded',
         props: { name: this.rightIcon || (this.vertical === true ? this.$q.iconSet.tabs.down : this.$q.iconSet.tabs.right) },

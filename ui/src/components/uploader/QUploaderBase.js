@@ -387,7 +387,7 @@ export default {
           this.__getBtn(h, this.uploadedFiles.length > 0, 'removeUploaded', this.removeUploadedFiles),
 
           this.isUploading === true
-            ? h(QSpinner, { staticClass: 'q-uploader__spinner' })
+            ? h(WSpinner, { staticClass: 'q-uploader__spinner' })
             : null,
 
           h('div', { staticClass: 'col column justify-center' }, [

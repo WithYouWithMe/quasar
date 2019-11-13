@@ -4,8 +4,8 @@ import WTr from './QTr.js'
 import WTd from './QTd.js'
 
 export {
-  QTable,
-  QTh,
-  QTr,
-  QTd
+  WTable,
+  WTh,
+  WTr,
+  WTd
 }

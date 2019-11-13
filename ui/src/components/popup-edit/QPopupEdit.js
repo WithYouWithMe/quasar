@@ -1,7 +1,7 @@
 import Vue from 'vue'
 
-import QMenu from '../menu/QMenu.js'
-import QBtn from '../btn/QBtn.js'
+import WMenu from '../menu/QMenu.js'
+import WBtn from '../btn/QBtn.js'
 
 import clone from '../../utils/clone.js'
 import { isDeepEqual } from '../../utils/is.js'

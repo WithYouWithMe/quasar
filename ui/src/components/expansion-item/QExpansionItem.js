@@ -1,11 +1,11 @@
 import Vue from 'vue'
 
-import QItem from '../item/QItem.js'
-import QItemSection from '../item/QItemSection.js'
-import QItemLabel from '../item/QItemLabel.js'
-import QIcon from '../icon/QIcon.js'
-import QSlideTransition from '../slide-transition/QSlideTransition.js'
-import QSeparator from '../separator/QSeparator.js'
+import WItem from '../item/QItem.js'
+import WItemSection from '../item/QItemSection.js'
+import WItemLabel from '../item/QItemLabel.js'
+import WIcon from '../icon/QIcon.js'
+import WSlideTransition from '../slide-transition/QSlideTransition.js'
+import WSeparator from '../separator/QSeparator.js'
 
 import { RouterLinkMixin } from '../../mixins/router-link.js'
 import ModelToggleMixin from '../../mixins/model-toggle.js'

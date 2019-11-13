@@ -4,7 +4,7 @@ import Intersection from '../../directives/Intersection.js'
 import slot from '../../utils/slot.js'
 
 export default Vue.extend({
-  name: 'QIntersection',
+  name: 'WIntersection',
 
   directives: {
     Intersection

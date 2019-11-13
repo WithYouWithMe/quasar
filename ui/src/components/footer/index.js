@@ -1,5 +1,5 @@
-import QFooter from './QFooter.js'
+import WFooter from './QFooter.js'
 
 export {
-  QFooter
+  WFooter
 }

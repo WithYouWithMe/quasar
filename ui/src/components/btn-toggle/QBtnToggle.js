@@ -1,7 +1,7 @@
 import Vue from 'vue'
 
-import QBtn from '../btn/QBtn.js'
-import QBtnGroup from '../btn-group/QBtnGroup.js'
+import WBtn from '../btn/QBtn.js'
+import WBtnGroup from '../btn-group/QBtnGroup.js'
 
 import slot from '../../utils/slot.js'
 

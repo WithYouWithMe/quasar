@@ -1,5 +1,5 @@
-import QScrollObserver from './QScrollObserver.js'
+import WScrollObserver from './QScrollObserver.js'
 
 export {
-  QScrollObserver
+  WScrollObserver
 }

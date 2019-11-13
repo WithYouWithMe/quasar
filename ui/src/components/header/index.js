@@ -1,5 +1,5 @@
-import QHeader from './QHeader.js'
+import WHeader from './QHeader.js'
 
 export {
-  QHeader
+  WHeader
 }

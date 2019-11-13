@@ -285,7 +285,7 @@ export default Vue.extend({
         h('div', {
           key: 'loading',
           staticClass: 'absolute-full flex flex-center'
-        }, this.$scopedSlots.loading !== void 0 ? this.$scopedSlots.loading() : [ h(QSpinner) ])
+        }, this.$scopedSlots.loading !== void 0 ? this.$scopedSlots.loading() : [ h(WSpinner) ])
       ] : void 0)
     )
 

@@ -1,5 +1,5 @@
-import QDate from './QDate.js'
+import WDate from './QDate.js'
 
 export {
-  QDate
+  WDate
 }

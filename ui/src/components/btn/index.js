@@ -1,5 +1,5 @@
-import QBtn from './QBtn.js'
+import WBtn from './QBtn.js'
 
 export {
-  QBtn
+  WBtn
 }

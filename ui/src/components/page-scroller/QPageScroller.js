@@ -1,6 +1,6 @@
 import Vue from 'vue'
 
-import QPageSticky from '../page-sticky/QPageSticky.js'
+import WPageSticky from '../page-sticky/QPageSticky.js'
 import { getScrollTarget, setScrollPosition } from '../../utils/scroll.js'
 
 export default Vue.extend({

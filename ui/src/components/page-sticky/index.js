@@ -1,5 +1,5 @@
-import QPageSticky from './QPageSticky.js'
+import WPageSticky from './QPageSticky.js'
 
 export {
-  QPageSticky
+  WPageSticky
 }

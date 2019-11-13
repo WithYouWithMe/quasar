@@ -4,9 +4,9 @@ import WField from '../field/QField.js'
 import WIcon from '../icon/QIcon.js'
 import WChip from '../chip/QChip.js'
 
-import QItem from '../item/QItem.js'
-import QItemSection from '../item/QItemSection.js'
-import QItemLabel from '../item/QItemLabel.js'
+import WItem from '../item/QItem.js'
+import WItemSection from '../item/QItemSection.js'
+import WItemLabel from '../item/QItemLabel.js'
 
 import WMenu from '../menu/QMenu.js'
 import QDialog from '../dialog/QDialog.js'
@@ -671,7 +671,7 @@ export default Vue.extend({
       }
 
       if (this.useChips === true) {
-        return this.selectedScope.map((scope, i) => h(QChip, {
+        return this.selectedScope.map((scope, i) => h(WChip, {
           key: 'option-' + i,
           props: {
             removable: this.__isDisabled(scope.opt) !== true,

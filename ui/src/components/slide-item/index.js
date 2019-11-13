@@ -1,5 +1,5 @@
-import QSlideItem from './QSlideItem.js'
+import WSlideItem from './QSlideItem.js'
 
 export {
-  QSlideItem
+  WSlideItem
 }

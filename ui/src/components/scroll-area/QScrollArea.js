@@ -4,8 +4,8 @@ import { between } from '../../utils/format.js'
 import { getMouseWheelDistance, prevent } from '../../utils/event.js'
 import { setScrollPosition, setHorizontalScrollPosition } from '../../utils/scroll.js'
 import slot from '../../utils/slot.js'
-import QResizeObserver from '../resize-observer/QResizeObserver.js'
-import QScrollObserver from '../scroll-observer/QScrollObserver.js'
+import WResizeObserver from '../resize-observer/QResizeObserver.js'
+import WScrollObserver from '../scroll-observer/QScrollObserver.js'
 import TouchPan from '../../directives/TouchPan.js'
 
 export default Vue.extend({

@@ -8,8 +8,8 @@ import WSeparator from '../separator/QSeparator.js'
 import WCard from '../card/QCard.js'
 import WCardSection from '../card/QCardSection.js'
 
-import QItem from '../item/QItem.js'
-import QItemSection from '../item/QItemSection.js'
+import WItem from '../item/QItem.js'
+import WItemSection from '../item/QItemSection.js'
 
 import DarkMixin from '../../mixins/dark.js'
 
@@ -88,8 +88,8 @@ export default Vue.extend({
         const img = action.avatar || action.img
 
         return action.label === void 0
-          ? h(QSeparator, { props: { spaced: true, dark: this.isDark } })
-          : h(QItem, {
+          ? h(WSeparator, { props: { spaced: true, dark: this.isDark } })
+          : h(WItem, {
             staticClass: 'q-bottom-sheet__item',
             class: action.classes,
             props: {

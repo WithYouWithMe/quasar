@@ -1,5 +1,5 @@
-import QBtnToggle from './QBtnToggle.js'
+import WBtnToggle from './QBtnToggle.js'
 
 export {
-  QBtnToggle
+  WBtnToggle
 }

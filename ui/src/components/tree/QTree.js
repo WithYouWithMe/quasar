@@ -1,9 +1,9 @@
 import Vue from 'vue'
 
-import QIcon from '../icon/QIcon.js'
-import QCheckbox from '../checkbox/QCheckbox.js'
-import QSlideTransition from '../slide-transition/QSlideTransition.js'
-import QSpinner from '../spinner/QSpinner.js'
+import WIcon from '../icon/QIcon.js'
+import WCheckbox from '../checkbox/QCheckbox.js'
+import WSlideTransition from '../slide-transition/QSlideTransition.js'
+import WSpinner from '../spinner/QSpinner.js'
 import DarkMixin from '../../mixins/dark.js'
 import { stopAndPrevent } from '../../utils/event.js'
 

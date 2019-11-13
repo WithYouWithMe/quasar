@@ -1,5 +1,5 @@
-import QDrawer from './QDrawer.js'
+import WDrawer from './QDrawer.js'
 
 export {
-  QDrawer
+  WDrawer
 }

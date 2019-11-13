@@ -1,7 +1,7 @@
 import QPage from './QPage.js'
-import QPageContainer from './QPageContainer.js'
+import WPageContainer from './QPageContainer.js'
 
 export {
   QPage,
-  QPageContainer
+  WPageContainer
 }

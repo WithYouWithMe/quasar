@@ -92,7 +92,7 @@ export default Vue.extend({
       def[0].componentOptions !== void 0 &&
       def[0].componentOptions.Ctor !== void 0 &&
       def[0].componentOptions.Ctor.sealedOptions !== void 0 &&
-      ['QDate', 'QTime', 'QCarousel', 'QColor'].includes(
+      ['WDate', 'WTime', 'WCarousel', 'WColor'].includes(
         def[0].componentOptions.Ctor.sealedOptions.name
       )
     ) ? { cover: true, maxHeight: '99vh' } : {}

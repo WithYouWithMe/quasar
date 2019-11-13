@@ -1,5 +1,5 @@
-import QIntersection from './QIntersection.js'
+import WIntersection from './QIntersection.js'
 
 export {
-  QIntersection
+  WIntersection
 }

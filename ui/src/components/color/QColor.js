@@ -291,7 +291,7 @@ export default Vue.extend({
       return h('div', {
         staticClass: 'q-color-picker__footer relative-position overflow-hidden'
       }, [
-        h(QTabs, {
+        h(WTabs, {
           staticClass: 'absolute-full',
           props: {
             value: this.view,
@@ -302,7 +302,7 @@ export default Vue.extend({
             input: val => { this.view = val }
           }
         }, [
-          h(QTab, {
+          h(WTab, {
             props: {
               icon: this.$q.iconSet.colorPicker.spectrum,
               name: 'spectrum',
@@ -310,7 +310,7 @@ export default Vue.extend({
             }
           }),
 
-          h(QTab, {
+          h(WTab, {
             props: {
               icon: this.$q.iconSet.colorPicker.tune,
               name: 'tune',
@@ -318,7 +318,7 @@ export default Vue.extend({
             }
           }),
 
-          h(QTab, {
+          h(WTab, {
             props: {
               icon: this.$q.iconSet.colorPicker.palette,
               name: 'palette',

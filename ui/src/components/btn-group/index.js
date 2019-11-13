@@ -1,5 +1,5 @@
-import QBtnGroup from './QBtnGroup.js'
+import WBtnGroup from './QBtnGroup.js'
 
 export {
-  QBtnGroup
+  WBtnGroup
 }

@@ -1,5 +1,5 @@
-import QCheckbox from '../checkbox/QCheckbox.js'
-import QSeparator from '../separator/QSeparator.js'
+import WCheckbox from '../checkbox/QCheckbox.js'
+import WSeparator from '../separator/QSeparator.js'
 
 export default {
   methods: {
@@ -31,7 +31,7 @@ export default {
               })
             ]),
 
-            h(QSeparator, { props: { dark: this.isDark } })
+            h(WSeparator, { props: { dark: this.isDark } })
           )
 
           const data = {

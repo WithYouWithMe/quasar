@@ -7,7 +7,7 @@ import WItemLabel from './QItemLabel.js'
 export {
   WList,
 
-  QItem,
-  QItemSection,
-  QItemLabel
+  WItem,
+  WItemSection,
+  WItemLabel
 }
