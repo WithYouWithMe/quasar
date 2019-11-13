@@ -5,9 +5,11 @@ import TableHeader from './table-header.js'
 import TableBody from './table-body.js'
 import Bottom from './table-bottom.js'
 import TableGrid from './table-grid.js'
-import WVirtualScroll from '../virtual-scroll/QVirtualScroll.js'
+import QVirtualScroll from '../virtual-scroll/QVirtualScroll.js'
+import QLinearProgress from '../linear-progress/QLinearProgress.js'
 
 import { commonVirtPropsList } from '../../mixins/virtual-scroll.js'
+import DarkMixin from '../../mixins/dark.js'
 import getTableMiddle from './get-table-middle.js'
 
 import Sort from './table-sort.js'
@@ -24,6 +26,8 @@ export default Vue.extend({
   name: 'WTable',
 
   mixins: [
+    DarkMixin,
+
     FullscreenMixin,
     Top,
     TableHeader,
@@ -89,10 +93,10 @@ export default Vue.extend({
     tableClass: [String, Array, Object],
     tableHeaderStyle: [String, Array, Object],
     tableHeaderClass: [String, Array, Object],
+    cardContainerClass: [String, Array, Object],
+    cardContainerStyle: [String, Array, Object],
     cardStyle: [String, Array, Object],
-    cardClass: [String, Array, Object],
-
-    dark: Boolean
+    cardClass: [String, Array, Object]
   },
 
   data () {
@@ -130,7 +134,7 @@ export default Vue.extend({
     },
 
     computedData () {
-      let rows = this.data.slice().map((row, i) => {
+      let rows = this.data.map((row, i) => {
         row.__index = i
         return row
       })
@@ -185,7 +189,7 @@ export default Vue.extend({
 
     cardDefaultClass () {
       return ` q-table__card` +
-        (this.dark === true ? ' q-table__card--dark' : '') +
+        (this.isDark === true ? ' q-table__card--dark q-dark' : '') +
         (this.square === true ? ` q-table--square` : '') +
         (this.flat === true ? ` q-table--flat` : '') +
         (this.bordered === true ? ` q-table--bordered` : '')
@@ -193,8 +197,9 @@ export default Vue.extend({
 
     containerClass () {
       return `q-table__container q-table--${this.separator}-separator` +
+        (this.loading === true ? ' q-table--loading' : '') +
         (this.grid === true ? ' q-table--grid' : this.cardDefaultClass) +
-        (this.dark === true ? ` q-table--dark` : '') +
+        (this.isDark === true ? ` q-table--dark` : '') +
         (this.dense === true ? ` q-table--dense` : '') +
         (this.wrapCells === false ? ` q-table--no-wrap` : '') +
         (this.inFullscreen === true ? ` fullscreen scroll` : '')
@@ -260,10 +265,15 @@ export default Vue.extend({
             items: this.computedRows,
             type: '__qtable'
           },
+          on: {
+            'virtual-scroll': this.__onVScroll
+          },
           class: this.tableClass,
           style: this.tableStyle,
           scopedSlots: {
-            before: () => header,
+            before: header === null
+              ? void 0
+              : () => header,
             default: this.getTableRowVirtual(h)
           }
         })
@@ -275,6 +285,24 @@ export default Vue.extend({
           header,
           this.getTableBody(h)
         ])
+    },
+
+    __onVScroll (info) {
+      this.$emit('virtual-scroll', info)
+    },
+
+    __getProgress (h) {
+      return [
+        h(QLinearProgress, {
+          staticClass: 'q-table__linear-progress',
+          props: {
+            color: this.color,
+            dark: this.isDark,
+            indeterminate: true,
+            trackColor: 'transparent'
+          }
+        })
+      ]
     }
   }
 })

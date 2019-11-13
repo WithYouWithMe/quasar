@@ -4,6 +4,7 @@ import WIcon from '../icon/QIcon.js'
 import WSpinner from '../spinner/QSpinner.js'
 
 import ValidateMixin from '../../mixins/validate.js'
+import DarkMixin from '../../mixins/dark.js'
 import slot from '../../utils/slot.js'
 import { stop, prevent } from '../../utils/event.js'
 import uid from '../../utils/uid.js'
@@ -11,9 +12,9 @@ import uid from '../../utils/uid.js'
 export default Vue.extend({
   name: 'WField',
 
-  inheritAttrs: false,
+  mixins: [ DarkMixin, ValidateMixin ],
 
-  mixins: [ ValidateMixin ],
+  inheritAttrs: false,
 
   props: {
     label: String,
@@ -27,11 +28,7 @@ export default Vue.extend({
     suffix: String,
 
     color: String,
-    bgColor: {
-      type: String,
-      default: 'white'
-    },
-    dark: Boolean,
+    bgColor: String,
 
     filled: Boolean,
     outlined: {
@@ -62,6 +59,7 @@ export default Vue.extend({
 
     autofocus: Boolean,
 
+    for: [String],
     maxlength: [Number, String],
     maxValues: [Number, String] // private, do not add to JSON; internally needed by WSelect
   },
@@ -73,7 +71,7 @@ export default Vue.extend({
       // used internally by validation for WInput
       // or menu handling for WSelect
       innerLoading: false,
-      targetUid: this.$attrs.for === void 0 ? 'qf_' + uid() : this.$attrs.for
+      targetUid: this.for === void 0 ? 'qf_' + uid() : this.for
     }
   },
 
@@ -139,7 +137,7 @@ export default Vue.extend({
 
         'q-field--dense': this.dense,
         'q-field--item-aligned q-item-type': this.itemAligned,
-        'q-field--dark': this.dark,
+        'q-field--dark': this.isDark,
 
         'q-field--auto-height': this.__getControl === void 0,
 

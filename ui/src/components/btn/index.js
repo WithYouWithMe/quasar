@@ -1,11 +1,5 @@
-import WBtn from './QBtn.js'
-import WBtnGroup from './QBtnGroup.js'
-import WBtnDropdown from './QBtnDropdown.js'
-import WBtnToggle from './QBtnToggle.js'
+import QBtn from './QBtn.js'
 
 export {
-  WBtn,
-  WBtnGroup,
-  WBtnDropdown,
-  WBtnToggle
+  QBtn
 }

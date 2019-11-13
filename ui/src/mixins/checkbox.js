@@ -1,6 +1,9 @@
+import DarkMixin from './dark.js'
 import { stopAndPrevent } from '../utils/event.js'
 
 export default {
+  mixins: [ DarkMixin ],
+
   props: {
     value: {
       required: true
@@ -15,7 +18,6 @@ export default {
 
     color: String,
     keepColor: Boolean,
-    dark: Boolean,
     dense: Boolean,
 
     disable: Boolean,
@@ -66,11 +68,13 @@ export default {
           val.splice(this.index, 1)
         }
         else {
-          val = this.value.concat([this.val])
+          val = this.value.concat([ this.val ])
         }
       }
       else if (this.isTrue === true) {
-        val = this.toggleIndeterminate ? this.indeterminateValue : this.falseValue
+        val = this.toggleIndeterminate === true
+          ? this.indeterminateValue
+          : this.falseValue
       }
       else if (this.isFalse === true) {
         val = this.trueValue

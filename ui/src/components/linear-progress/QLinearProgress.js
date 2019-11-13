@@ -1,5 +1,6 @@
 import Vue from 'vue'
 
+import DarkMixin from '../../mixins/dark.js'
 import slot from '../../utils/slot.js'
 
 function width (val) {
@@ -17,6 +18,8 @@ const sizes = {
 export default Vue.extend({
   name: 'WLinearProgress',
 
+  mixins: [ DarkMixin ],
+
   props: {
     value: {
       type: Number,
@@ -28,7 +31,6 @@ export default Vue.extend({
 
     color: String,
     trackColor: String,
-    dark: Boolean,
 
     reverse: Boolean,
     stripe: Boolean,
@@ -61,7 +63,7 @@ export default Vue.extend({
     },
 
     trackClass () {
-      return 'q-linear-progress__track--' + (this.dark === true ? 'dark' : 'light') +
+      return 'q-linear-progress__track--' + (this.isDark === true ? 'dark' : 'light') +
         (this.trackColor !== void 0 ? ` bg-${this.trackColor}` : '')
     },
 
@@ -79,12 +81,7 @@ export default Vue.extend({
   },
 
   render (h) {
-    return h('div', {
-      staticClass: 'q-linear-progress',
-      style: this.sizeStyle,
-      class: this.classes,
-      on: this.$listeners
-    }, [
+    let child = [
       h('div', {
         staticClass: 'q-linear-progress__track absolute-full',
         style: this.trackStyle,
@@ -95,12 +92,26 @@ export default Vue.extend({
         staticClass: 'q-linear-progress__model absolute-full',
         style: this.modelStyle,
         class: this.modelClasses
-      }),
+      })
+    ]
 
-      this.stripe === true && this.motion === false ? h('div', {
+    this.stripe === true && this.motion === false && child.push(
+      h('div', {
         staticClass: 'q-linear-progress__stripe absolute-full',
         style: this.stripeStyle
-      }) : null
-    ].concat(slot(this, 'default')))
+      })
+    )
+
+    const def = slot(this, 'default')
+    if (def !== void 0) {
+      child = child.concat(def)
+    }
+
+    return h('div', {
+      staticClass: 'q-linear-progress',
+      style: this.sizeStyle,
+      class: this.classes,
+      on: this.$listeners
+    }, child)
   }
 })

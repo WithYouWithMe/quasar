@@ -3,12 +3,13 @@ import Vue from 'vue'
 import WIcon from '../icon/QIcon.js'
 import WSpinner from '../spinner/QSpinner.js'
 
-import BtnMixin from './btn-mixin.js'
+import BtnMixin from '../../mixins/btn.js'
 
 import Platform from '../../plugins/Platform.js'
 
 import slot from '../../utils/slot.js'
 import { stopAndPrevent, listenOpts } from '../../utils/event.js'
+import { getTouchTarget } from '../../utils/touch.js'
 
 const { passiveCapture } = listenOpts
 
@@ -23,10 +24,7 @@ export default Vue.extend({
   mixins: [ BtnMixin ],
 
   props: {
-    percentage: {
-      type: Number,
-      validator: v => v >= 0 && v <= 100
-    },
+    percentage: Number,
     darkPercentage: Boolean
   },
 
@@ -42,16 +40,20 @@ export default Vue.extend({
           { keyCodes: [] },
           this.ripple === true ? {} : this.ripple
         )
+    },
+
+    computedPercentage () {
+      return Math.max(0, Math.min(100, this.percentage))
     }
   },
 
   methods: {
     click (e) {
-      if (e.defaultPrevented === true) {
-        return
-      }
-
       if (e !== void 0) {
+        if (e.defaultPrevented === true) {
+          return
+        }
+
         const el = document.activeElement
         // focus button if it came from ENTER on form
         // prevent the new submit (already done)
@@ -121,10 +123,10 @@ export default Vue.extend({
     __onTouchstart (e) {
       if (touchTarget !== this.$el) {
         touchTarget !== void 0 && this.__cleanup()
-
         touchTarget = e.target
-        touchTarget.addEventListener('touchcancel', this.__onPressEnd, passiveCapture)
-        touchTarget.addEventListener('touchend', this.__onPressEnd, passiveCapture)
+        const target = getTouchTarget(touchTarget)
+        target.addEventListener('touchcancel', this.__onPressEnd, passiveCapture)
+        target.addEventListener('touchend', this.__onPressEnd, passiveCapture)
       }
 
       this.$emit('touchstart', e)
@@ -133,7 +135,6 @@ export default Vue.extend({
     __onMousedown (e) {
       if (mouseTarget !== this.$el) {
         mouseTarget !== void 0 && this.__cleanup()
-
         mouseTarget = this.$el
         document.addEventListener('mouseup', this.__onPressEnd, passiveCapture)
       }
@@ -162,8 +163,9 @@ export default Vue.extend({
       this.__cleanup()
     },
 
-    __cleanup () {
+    __cleanup (destroying) {
       if (
+        destroying !== true &&
         (touchTarget === this.$el || mouseTarget === this.$el) &&
         this.$refs.blurTarget !== void 0 &&
         this.$refs.blurTarget !== document.activeElement
@@ -171,9 +173,10 @@ export default Vue.extend({
         this.$refs.blurTarget.focus()
       }
 
-      if (touchTarget !== void 0 && touchTarget === this.$el) {
-        touchTarget.removeEventListener('touchcancel', this.__onPressEnd, passiveCapture)
-        touchTarget.removeEventListener('touchend', this.__onPressEnd, passiveCapture)
+      if (touchTarget === this.$el) {
+        const target = getTouchTarget(touchTarget)
+        target.removeEventListener('touchcancel', this.__onPressEnd, passiveCapture)
+        target.removeEventListener('touchend', this.__onPressEnd, passiveCapture)
         touchTarget = void 0
       }
 
@@ -193,7 +196,7 @@ export default Vue.extend({
   },
 
   beforeDestroy () {
-    this.__cleanup()
+    this.__cleanup(true)
   },
 
   render (h) {
@@ -206,7 +209,7 @@ export default Vue.extend({
         attrs: this.attrs
       }
 
-    if (this.isDisabled === false) {
+    if (this.isActionable === true) {
       data.on = {
         ...this.$listeners,
         click: this.click,
@@ -217,14 +220,14 @@ export default Vue.extend({
       if (this.$q.platform.has.touch === true) {
         data.on.touchstart = this.__onTouchstart
       }
+    }
 
-      if (this.ripple !== false) {
-        data.directives = [{
-          name: 'ripple',
-          value: this.computedRipple,
-          modifiers: { center: this.isRound }
-        }]
-      }
+    if (this.disable !== true && this.ripple !== false) {
+      data.directives = [{
+        name: 'ripple',
+        value: this.computedRipple,
+        modifiers: { center: this.isRound }
+      }]
     }
 
     if (this.icon !== void 0) {
@@ -241,9 +244,8 @@ export default Vue.extend({
       )
     }
 
-    inner.push(
-      slot(this, 'default')
-    )
+    const def = slot(this, 'default')
+    def !== void 0 && inner.push(def)
 
     if (this.iconRight !== void 0 && this.isRound === false) {
       inner.push(
@@ -261,15 +263,13 @@ export default Vue.extend({
       })
     ]
 
-    if (this.loading === true && this.percentage !== void 0) {
-      child.push(
-        h('div', {
-          staticClass: 'q-btn__progress absolute-full',
-          class: this.darkPercentage ? 'q-btn__progress--dark' : null,
-          style: { transform: `scale3d(${this.percentage / 100},1,1)` }
-        })
-      )
-    }
+    this.loading === true && this.percentage !== void 0 && child.push(
+      h('div', {
+        staticClass: 'q-btn__progress absolute-full',
+        class: this.darkPercentage === true ? 'q-btn__progress--dark' : '',
+        style: { transform: `scale3d(${this.computedPercentage / 100},1,1)` }
+      })
+    )
 
     child.push(
       h('div', {
@@ -278,18 +278,16 @@ export default Vue.extend({
       }, inner)
     )
 
-    if (this.loading !== null) {
-      child.push(
-        h('transition', {
-          props: { name: 'q-transition--fade' }
-        }, this.loading === true ? [
-          h('div', {
-            key: 'loading',
-            staticClass: 'absolute-full flex flex-center'
-          }, this.$scopedSlots.loading !== void 0 ? this.$scopedSlots.loading() : [ h(WSpinner) ])
-        ] : void 0)
-      )
-    }
+    this.loading !== null && child.push(
+      h('transition', {
+        props: { name: 'q-transition--fade' }
+      }, this.loading === true ? [
+        h('div', {
+          key: 'loading',
+          staticClass: 'absolute-full flex flex-center'
+        }, this.$scopedSlots.loading !== void 0 ? this.$scopedSlots.loading() : [ h(QSpinner) ])
+      ] : void 0)
+    )
 
     return h(this.isLink === true ? 'a' : 'button', data, child)
   }

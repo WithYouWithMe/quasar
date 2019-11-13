@@ -4,6 +4,8 @@ import WRadio from '../radio/QRadio.js'
 import WCheckbox from '../checkbox/QCheckbox.js'
 import WToggle from '../toggle/QToggle.js'
 
+import DarkMixin from '../../mixins/dark.js'
+
 const components = {
   radio: WRadio,
   checkbox: WCheckbox,
@@ -12,6 +14,8 @@ const components = {
 
 export default Vue.extend({
   name: 'WOptionGroup',
+
+  mixins: [ DarkMixin ],
 
   props: {
     value: {
@@ -31,7 +35,6 @@ export default Vue.extend({
 
     color: String,
     keepColor: Boolean,
-    dark: Boolean,
     dense: Boolean,
 
     leftLabel: Boolean,
@@ -83,7 +86,7 @@ export default Vue.extend({
           color: opt.color || this.color,
           checkedIcon: opt.checkedIcon,
           uncheckedIcon: opt.uncheckedIcon,
-          dark: opt.dark || this.dark,
+          dark: opt.dark || this.isDark,
           dense: this.dense,
           keepColor: opt.keepColor || this.keepColor
         },

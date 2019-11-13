@@ -1,7 +1,7 @@
 import Vue from 'vue'
 
-import WScrollObserver from '../observer/QScrollObserver.js'
-import WResizeObserver from '../observer/QResizeObserver.js'
+import QScrollObserver from '../scroll-observer/QScrollObserver.js'
+import QResizeObserver from '../resize-observer/QResizeObserver.js'
 import { onSSR } from '../../plugins/Platform.js'
 import { getScrollbarWidth } from '../../utils/scroll.js'
 import slot from '../../utils/slot.js'
@@ -109,7 +109,8 @@ export default Vue.extend({
       h(WScrollObserver, {
         on: { scroll: this.__onPageScroll }
       }),
-      h(WResizeObserver, {
+
+      h(QResizeObserver, {
         on: { resize: this.__onPageResize }
       })
     ].concat(

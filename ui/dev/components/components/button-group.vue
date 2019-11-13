@@ -6,6 +6,9 @@
       </q-btn>
       <q-btn color="amber" push to="/b">
         Link /b
+        <q-badge color="red" floating>
+          4
+        </q-badge>
       </q-btn>
       <q-btn color="orange" push to="/c">
         Link /c
@@ -18,6 +21,9 @@
       </q-btn>
       <q-btn color="amber" unelevated to="/b">
         Link /b
+        <q-badge color="red" floating>
+          4
+        </q-badge>
       </q-btn>
       <q-btn color="orange" unelevated to="/c">
         Link /c
@@ -106,6 +112,9 @@
       </q-btn>
       <q-btn color="amber">
         Btn 2
+        <q-badge color="red" floating>
+          4
+        </q-badge>
       </q-btn>
       <q-btn color="orange">
         Btn 3
@@ -113,63 +122,68 @@
     </q-btn-group>
 
     <div v-for="push in options" :key="push">
-      <template v-if="!push || !flat">
-        <div v-for="flat in options" :key="flat">
-          <template v-if="!(push || flat) || !outline">
-            <div v-for="outline in options" :key="outline">
-              <div v-for="rounded in options" :key="rounded">
-                <div v-for="size in sizes" :key="size" class="q-ma-sm">
-                  <p class="caption">
-                    {{ push ? 'push ' : '' }}
-                    {{ rounded ? 'rounded ' : '' }}
-                    {{ outline ? 'outline ' : '' }}
-                    {{ flat ? 'flat ' : '' }}
-                    {{ size }}
-                  </p>
-                  <q-btn-group :push="push" :rounded="rounded" :outline="outline" :flat="flat">
-                    <q-btn color="yellow" :push="push" :rounded="rounded" :outline="outline" :flat="flat" :size="size">
-                      First
-                    </q-btn>
-                    <q-btn color="amber" :push="push" :rounded="rounded" :outline="outline" :flat="flat" :size="size">
-                      Second
-                    </q-btn>
-                    <q-btn color="orange" :push="push" :rounded="rounded" :outline="outline" :flat="flat" :size="size">
-                      Third
-                    </q-btn>
-                  </q-btn-group>
+      <div v-for="flat in options" :key="flat">
+        <div v-for="outline in options" :key="outline">
+          <div v-for="rounded in options" :key="rounded">
+            <div v-for="size in sizes" :key="size" class="q-ma-sm">
+              <p class="caption">
+                {{ push ? 'push ' : '' }}
+                {{ rounded ? 'rounded ' : '' }}
+                {{ outline ? 'outline ' : '' }}
+                {{ flat ? 'flat ' : '' }}
+                {{ size }}
+              </p>
+              <q-btn-group :push="push" :rounded="rounded" :outline="outline" :flat="flat">
+                <q-btn color="yellow" :push="push" :rounded="rounded" :outline="outline" :flat="flat" :size="size">
+                  First
+                </q-btn>
+                <q-btn color="amber" :push="push" :rounded="rounded" :outline="outline" :flat="flat" :size="size">
+                  Second
+                  <q-badge color="red" floating>
+                    4
+                  </q-badge>
+                </q-btn>
+                <q-btn color="orange" :push="push" :rounded="rounded" :outline="outline" :flat="flat" :size="size">
+                  Third
+                </q-btn>
+              </q-btn-group>
 
-                  <q-btn-group :push="push" :rounded="rounded" :outline="outline" :flat="flat">
-                    <q-btn color="yellow" :push="push" :rounded="rounded" :outline="outline" :flat="flat" :size="size" disable>
-                      First
-                    </q-btn>
-                    <q-btn color="amber" :push="push" :rounded="rounded" :outline="outline" :flat="flat" :size="size" disable>
-                      Second
-                    </q-btn>
-                    <q-btn color="orange" :push="push" :rounded="rounded" :outline="outline" :flat="flat" :size="size" disable>
-                      Third
-                    </q-btn>
-                  </q-btn-group>
+              <q-btn-group :push="push" :rounded="rounded" :outline="outline" :flat="flat">
+                <q-btn color="yellow" :push="push" :rounded="rounded" :outline="outline" :flat="flat" :size="size" disable>
+                  First
+                </q-btn>
+                <q-btn color="amber" :push="push" :rounded="rounded" :outline="outline" :flat="flat" :size="size" disable>
+                  Second
+                  <q-badge color="red" floating>
+                    4
+                  </q-badge>
+                </q-btn>
+                <q-btn color="orange" :push="push" :rounded="rounded" :outline="outline" :flat="flat" :size="size" disable>
+                  Third
+                </q-btn>
+              </q-btn-group>
 
-                  <q-btn-group :push="push" :rounded="rounded" :outline="outline" style="margin-left: 2em;">
-                    <q-btn color="orange" :push="push" :rounded="rounded" :outline="outline" :flat="flat" :size="size">
-                      First
-                    </q-btn>
-                    <q-btn color="orange" :push="push" :rounded="rounded" :outline="outline" :flat="flat" :size="size">
-                      Second
-                    </q-btn>
+              <q-btn-group :push="push" :rounded="rounded" :outline="outline" style="margin-left: 2em;">
+                <q-btn color="orange" :push="push" :rounded="rounded" :outline="outline" :flat="flat" :size="size">
+                  First
+                </q-btn>
+                <q-btn color="orange" :push="push" :rounded="rounded" :outline="outline" :flat="flat" :size="size">
+                  Second
+                  <q-badge color="red" floating>
+                    4
+                  </q-badge>
+                </q-btn>
 
-                    <q-separator vertical />
+                <q-separator vertical />
 
-                    <q-btn color="orange" :push="push" :rounded="rounded" :outline="outline" :flat="flat" :size="size">
-                      Separated
-                    </q-btn>
-                  </q-btn-group>
-                </div>
-              </div>
+                <q-btn color="orange" :push="push" :rounded="rounded" :outline="outline" :flat="flat" :size="size">
+                  Separated
+                </q-btn>
+              </q-btn-group>
             </div>
-          </template>
+          </div>
         </div>
-      </template>
+      </div>
     </div>
   </div>
 </template>

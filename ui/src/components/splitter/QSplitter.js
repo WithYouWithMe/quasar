@@ -2,11 +2,14 @@ import Vue from 'vue'
 
 import TouchPan from '../../directives/TouchPan.js'
 
+import DarkMixin from '../../mixins/dark.js'
 import slot from '../../utils/slot.js'
 import { stop } from '../../utils/event.js'
 
 export default Vue.extend({
   name: 'WSplitter',
+
+  mixins: [ DarkMixin ],
 
   directives: {
     TouchPan
@@ -35,7 +38,6 @@ export default Vue.extend({
 
     horizontal: Boolean,
     disable: Boolean,
-    dark: Boolean,
 
     beforeClass: [Array, String, Object],
     afterClass: [Array, String, Object],
@@ -67,7 +69,7 @@ export default Vue.extend({
       return (this.horizontal === true ? 'column' : 'row') +
         ` q-splitter--${this.horizontal === true ? 'horizontal' : 'vertical'}` +
         ` q-splitter--${this.disable === true ? 'disabled' : 'workable'}` +
-        (this.dark === true ? ' q-splitter--dark' : '')
+        (this.isDark === true ? ' q-splitter--dark' : '')
     },
 
     prop () {
@@ -143,11 +145,7 @@ export default Vue.extend({
   },
 
   render (h) {
-    return h('div', {
-      staticClass: 'q-splitter no-wrap',
-      class: this.classes,
-      on: this.$listeners
-    }, [
+    let child = [
       h('div', {
         ref: 'before',
         staticClass: 'q-splitter__panel q-splitter__before' + (this.reverse === true ? ' col' : ''),
@@ -185,6 +183,17 @@ export default Vue.extend({
         class: this.afterClass,
         on: { input: stop }
       }, slot(this, 'after'))
-    ].concat(slot(this, 'default')))
+    ]
+
+    const def = slot(this, 'default')
+    if (def !== void 0) {
+      child = child.concat(def)
+    }
+
+    return h('div', {
+      staticClass: 'q-splitter no-wrap',
+      class: this.classes,
+      on: this.$listeners
+    }, child)
   }
 })

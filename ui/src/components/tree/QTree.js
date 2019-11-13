@@ -1,13 +1,16 @@
 import Vue from 'vue'
 
-import WIcon from '../icon/QIcon.js'
-import WCheckbox from '../checkbox/QCheckbox.js'
-import WSlideTransition from '../slide-transition/QSlideTransition.js'
-import WSpinner from '../spinner/QSpinner.js'
+import QIcon from '../icon/QIcon.js'
+import QCheckbox from '../checkbox/QCheckbox.js'
+import QSlideTransition from '../slide-transition/QSlideTransition.js'
+import QSpinner from '../spinner/QSpinner.js'
+import DarkMixin from '../../mixins/dark.js'
 import { stopAndPrevent } from '../../utils/event.js'
 
 export default Vue.extend({
   name: 'WTree',
+
+  mixins: [ DarkMixin ],
 
   props: {
     nodes: {
@@ -27,7 +30,6 @@ export default Vue.extend({
     controlColor: String,
     textColor: String,
     selectedColor: String,
-    dark: Boolean,
 
     icon: String,
 
@@ -63,7 +65,7 @@ export default Vue.extend({
     classes () {
       return {
         [`text-${this.color}`]: this.color,
-        'q-tree--dark': this.dark
+        'q-tree--dark': this.isDark
       }
     },
 
@@ -391,7 +393,7 @@ export default Vue.extend({
     },
 
     __getSlotScope (node, meta, key) {
-      const scope = { tree: this, node, key, color: this.color, dark: this.dark }
+      const scope = { tree: this, node, key, color: this.color, dark: this.isDark }
 
       Object.defineProperty(scope, 'expanded', {
         get: () => { return meta.expanded },
@@ -451,7 +453,7 @@ export default Vue.extend({
         body = node.body
           ? this.$scopedSlots[`body-${node.body}`] || this.$scopedSlots['default-body']
           : this.$scopedSlots['default-body'],
-        slotScope = header || body
+        slotScope = header !== void 0 || body !== void 0
           ? this.__getSlotScope(node, meta, key)
           : null
 
@@ -514,7 +516,7 @@ export default Vue.extend({
               props: {
                 value: meta.indeterminate ? null : meta.ticked,
                 color: this.computedControlColor,
-                dark: this.dark,
+                dark: this.isDark,
                 dense: true,
                 keepColor: true,
                 disable: !meta.tickable
