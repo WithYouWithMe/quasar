@@ -4,7 +4,8 @@ import WBtn from '../btn/QBtn.js'
 import WIcon from '../icon/QIcon.js'
 import FabMixin from './fab-mixin.js'
 import ModelToggleMixin from '../../mixins/model-toggle.js'
-import slot from '../../utils/slot.js'
+import { slot } from '../../utils/slot.js'
+import { cache } from '../../utils/vm.js'
 
 export default Vue.extend({
   name: 'WFab',
@@ -56,9 +57,9 @@ export default Vue.extend({
           icon: void 0,
           fab: true
         },
-        on: {
+        on: cache(this, 'tog', {
           click: this.toggle
-        }
+        })
       }, slot(this, 'tooltip', []).concat([
         h(WIcon, {
           staticClass: 'q-fab__icon absolute-full',

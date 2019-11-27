@@ -1,6 +1,7 @@
 import { clearSelection } from '../utils/selection.js'
 import { prevent } from '../utils/event.js'
-import { addEvt, cleanEvt } from '../utils/touch.js'
+import { addEvt, cleanEvt, getTouchTarget } from '../utils/touch.js'
+import { isKeyCode } from '../utils/key-composition.js'
 
 export default {
   props: {
@@ -61,17 +62,22 @@ export default {
     },
 
     __toggleKey (evt) {
-      if (evt !== void 0 && evt.keyCode === 13 && evt.qKeyEvent !== true) {
-        this.toggle(evt)
-      }
+      isKeyCode(evt, 13) === true && this.toggle(evt)
     },
 
-    __mobileTouch (evt) {
+    __mobileCleanup (evt) {
+      this.anchorEl.classList.remove('non-selectable')
       clearTimeout(this.touchTimer)
 
       if (this.showing === true && evt !== void 0) {
         clearSelection()
       }
+    },
+
+    __mobilePrevent: prevent,
+
+    __mobileTouch (evt) {
+      this.__mobileCleanup(evt)
 
       if (this.__showCondition(evt) !== true) {
         return
@@ -80,9 +86,16 @@ export default {
       this.hide(evt)
       this.anchorEl.classList.add('non-selectable')
 
+      const target = getTouchTarget(evt.target)
+      addEvt(this, 'anchor', [
+        [ target, 'touchmove', '__mobileCleanup', 'passive' ],
+        [ target, 'touchend', '__mobileCleanup', 'passive' ],
+        [ target, 'touchcancel', '__mobileCleanup', 'passive' ],
+        [ this.anchorEl, 'contextmenu', '__mobilePrevent', 'notPassive' ]
+      ])
+
       this.touchTimer = setTimeout(() => {
         this.show(evt)
-        this.anchorEl.classList.remove('non-selectable')
       }, 300)
     },
 

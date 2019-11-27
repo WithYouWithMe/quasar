@@ -6,6 +6,7 @@ import WSlideTransition from '../slide-transition/QSlideTransition.js'
 import WSpinner from '../spinner/QSpinner.js'
 import DarkMixin from '../../mixins/dark.js'
 import { stopAndPrevent } from '../../utils/event.js'
+import { shouldIgnoreKey } from '../../utils/key-composition.js'
 
 export default Vue.extend({
   name: 'WTree',
@@ -483,8 +484,10 @@ export default Vue.extend({
               this.__onClick(node, meta, e)
             },
             keypress: e => {
-              if (e.keyCode === 13) { this.__onClick(node, meta, e, true) }
-              else if (e.keyCode === 32) { this.__onExpandClick(node, meta, e, true) }
+              if (shouldIgnoreKey(e) !== true) {
+                if (e.keyCode === 13) { this.__onClick(node, meta, e, true) }
+                else if (e.keyCode === 32) { this.__onExpandClick(node, meta, e, true) }
+              }
             }
           }
         }, [

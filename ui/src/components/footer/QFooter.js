@@ -2,8 +2,9 @@ import Vue from 'vue'
 
 import WResizeObserver from '../resize-observer/QResizeObserver.js'
 import { onSSR } from '../../plugins/Platform.js'
-import slot from '../../utils/slot.js'
+import { mergeSlot } from '../../utils/slot.js'
 import { stop } from '../../utils/event.js'
+import { cache } from '../../utils/vm.js'
 
 export default Vue.extend({
   name: 'WFooter',
@@ -132,7 +133,7 @@ export default Vue.extend({
     const child = [
       h(WResizeObserver, {
         props: { debounce: 0 },
-        on: { resize: this.__onResize }
+        on: cache(this, 'resize', { resize: this.__onResize })
       })
     ]
 
@@ -150,7 +151,7 @@ export default Vue.extend({
         ...this.$listeners,
         input: stop
       }
-    }, child.concat(slot(this, 'default')))
+    }, mergeSlot(child, this, 'default'))
   },
 
   created () {

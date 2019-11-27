@@ -2,7 +2,8 @@ import Vue from 'vue'
 
 import DarkMixin from '../../mixins/dark.js'
 import { stopAndPrevent } from '../../utils/event.js'
-import slot from '../../utils/slot.js'
+import { slot, mergeSlot } from '../../utils/slot.js'
+import { cache } from '../../utils/vm.js'
 
 export default Vue.extend({
   name: 'WRadio',
@@ -86,7 +87,7 @@ export default Vue.extend({
       h('input', {
         staticClass: 'q-radio__native q-ma-none q-pa-none invisible',
         attrs: { type: 'checkbox' },
-        on: { change: this.set }
+        on: cache(this, 'inp', { change: this.set })
       })
     )
 
@@ -97,24 +98,24 @@ export default Vue.extend({
       }, content)
     ]
 
-    const def = slot(this, 'default')
+    const label = this.label !== void 0
+      ? mergeSlot([ this.label ], this, 'default')
+      : slot(this, 'default')
 
-    if (this.label !== void 0 || def !== void 0) {
-      child.push(
-        h('div', {
-          staticClass: 'q-radio__label q-anchor--skip'
-        }, (this.label !== void 0 ? [ this.label ] : []).concat(def))
-      )
-    }
+    label !== void 0 && child.push(
+      h('div', {
+        staticClass: 'q-radio__label q-anchor--skip'
+      }, label)
+    )
 
     return h('div', {
       staticClass: 'q-radio cursor-pointer no-outline row inline no-wrap items-center',
       class: this.classes,
       attrs: { tabindex: this.computedTabindex },
-      on: {
+      on: cache(this, 'inpExt', {
         click: this.set,
         keydown: this.__keyDown
-      }
+      })
     }, child)
   }
 })

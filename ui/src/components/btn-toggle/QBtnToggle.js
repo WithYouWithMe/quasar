@@ -3,7 +3,7 @@ import Vue from 'vue'
 import WBtn from '../btn/QBtn.js'
 import WBtnGroup from '../btn-group/QBtnGroup.js'
 
-import slot from '../../utils/slot.js'
+import { slot } from '../../utils/slot.js'
 
 import RippleMixin from '../../mixins/ripple.js'
 

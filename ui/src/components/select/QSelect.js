@@ -14,6 +14,9 @@ import QDialog from '../dialog/QDialog.js'
 import { isDeepEqual } from '../../utils/is.js'
 import { stop, prevent, stopAndPrevent } from '../../utils/event.js'
 import { normalizeToInterval } from '../../utils/format.js'
+import { shouldIgnoreKey, isKeyCode } from '../../utils/key-composition.js'
+import { mergeSlot } from '../../utils/slot.js'
+import { cache } from '../../utils/vm.js'
 
 import VirtualScroll from '../../mixins/virtual-scroll.js'
 import CompositionMixin from '../../mixins/composition.js'
@@ -447,11 +450,12 @@ export default Vue.extend({
       // if ESC and we have an opened menu
       // then stop propagation (might be caught by a QDialog
       // and so it will also close the QDialog, which is wrong)
-      if (e.keyCode === 27 && this.menu === true) {
+      if (isKeyCode(e, 27) === true && this.menu === true) {
         stop(e)
         // on ESC we need to close the dialog also
         this.hidePopup()
       }
+
       this.$emit('keyup', e)
     },
 
@@ -461,6 +465,10 @@ export default Vue.extend({
 
     __onTargetKeydown (e) {
       this.$emit('keydown', e)
+
+      if (shouldIgnoreKey(e) === true) {
+        return
+      }
 
       const tabShouldSelect = e.shiftKey !== true && this.multiple !== true && this.optionIndex > -1
 
@@ -685,9 +693,9 @@ export default Vue.extend({
             textColor: this.color,
             tabindex: this.computedTabindex
           },
-          on: {
+          on: cache(this, 'rem#' + i, {
             remove () { scope.removeAtIndex(i) }
-          }
+          })
         }, [
           h('span', {
             domProps: {
@@ -725,11 +733,11 @@ export default Vue.extend({
             tabindex: this.tabindex,
             id: isShadowField === true ? void 0 : this.targetUid
           },
-          on: {
+          on: cache(this, 'ctrl', {
             keydown: this.__onTargetKeydown,
             keyup: this.__onTargetKeyup,
             keypress: this.__onTargetKeypress
-          }
+          })
         }))
       }
 
@@ -762,11 +770,8 @@ export default Vue.extend({
       if (this.$scopedSlots['before-options'] !== void 0) {
         options = this.$scopedSlots['before-options']().concat(options)
       }
-      if (this.$scopedSlots['after-options'] !== void 0) {
-        options = options.concat(this.$scopedSlots['after-options']())
-      }
 
-      return options
+      return mergeSlot(options, this, 'after-options')
     },
 
     __getInnerAppend (h) {
@@ -815,7 +820,7 @@ export default Vue.extend({
           disabled: this.disable === true,
           readonly: this.readonly === true
         },
-        on
+        on: cache(this, 'inp#' + this.hasDialog, on)
       })
     },
 
@@ -988,10 +993,10 @@ export default Vue.extend({
           transitionHide: this.transitionHide,
           separateClosePopup: true
         },
-        on: {
+        on: cache(this, 'menu', {
           '&scroll': this.__onVirtualScrollEvt,
           'before-hide': this.__closeMenu
-        }
+        })
       }, child)
     },
 
@@ -1044,10 +1049,10 @@ export default Vue.extend({
           staticClass: 'scroll',
           class: this.menuContentClass,
           style: this.popupContentStyle,
-          on: {
+          on: cache(this, 'virtMenu', {
             click: prevent,
             '&scroll': this.__onVirtualScrollEvt
-          }
+          })
         }, (
           this.noOptions === true
             ? (
@@ -1068,11 +1073,11 @@ export default Vue.extend({
           transitionShow: this.transitionShowComputed,
           transitionHide: this.transitionHide
         },
-        on: {
+        on: cache(this, 'dialog', {
           'before-hide': this.__onDialogBeforeHide,
           hide: this.__onDialogHide,
           show: this.__onDialogShow
-        }
+        })
       }, [
         h('div', {
           staticClass: 'q-select__dialog' +

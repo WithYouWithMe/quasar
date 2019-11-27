@@ -5,7 +5,9 @@ import WBtn from '../btn/QBtn.js'
 
 import clone from '../../utils/clone.js'
 import { isDeepEqual } from '../../utils/is.js'
-import slot from '../../utils/slot.js'
+import { slot } from '../../utils/slot.js'
+import { isKeyCode } from '../../utils/key-composition.js'
+import { cache } from '../../utils/vm.js'
 
 export default Vue.extend({
   name: 'WPopupEdit',
@@ -123,7 +125,7 @@ export default Vue.extend({
               color: this.color,
               label: this.labelCancel || this.$q.lang.label.cancel
             },
-            on: { click: this.cancel }
+            on: cache(this, 'cancel', { click: this.cancel })
           }),
           h(WBtn, {
             props: {
@@ -131,7 +133,7 @@ export default Vue.extend({
               color: this.color,
               label: this.labelSet || this.$q.lang.label.set
             },
-            on: { click: this.set }
+            on: cache(this, 'ok', { click: this.set })
           })
         ])
       )
@@ -150,7 +152,7 @@ export default Vue.extend({
         cover: this.cover,
         contentClass: this.classes
       },
-      on: {
+      on: cache(this, 'menu', {
         'before-show': () => {
           this.validated = false
           this.initialValue = clone(this.value)
@@ -173,9 +175,9 @@ export default Vue.extend({
           this.$emit('hide')
         },
         keyup: e => {
-          e.keyCode === 13 && this.set()
+          isKeyCode(e, 13) === true && this.set()
         }
-      }
+      })
     }, this.__getContent(h))
   }
 })

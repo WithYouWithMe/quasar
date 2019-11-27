@@ -2,7 +2,7 @@ import Vue from 'vue'
 
 import WSpinner from '../spinner/QSpinner.js'
 
-import slot from '../../utils/slot.js'
+import { slot } from '../../utils/slot.js'
 
 export default Vue.extend({
   name: 'WImg',

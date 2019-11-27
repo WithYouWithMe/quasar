@@ -435,6 +435,11 @@ const cli = [
         path: 'app-icons-electron'
       },
       {
+        name: 'Node Integration',
+        badge: 'update',
+        path: 'node-integration'
+      },
+      {
         name: 'Electron Packages',
         path: 'electron-packages'
       },
@@ -1085,6 +1090,7 @@ const utils = [
   },
   {
     name: 'Other Utils',
+    badge: 'update',
     path: 'other-utils'
   }
 ]

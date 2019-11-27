@@ -3,7 +3,9 @@ import Vue from 'vue'
 import { between } from '../../utils/format.js'
 import { getMouseWheelDistance, prevent } from '../../utils/event.js'
 import { setScrollPosition, setHorizontalScrollPosition } from '../../utils/scroll.js'
-import slot from '../../utils/slot.js'
+import { slot, mergeSlot } from '../../utils/slot.js'
+import { cache } from '../../utils/vm.js'
+
 import WResizeObserver from '../resize-observer/QResizeObserver.js'
 import WScrollObserver from '../scroll-observer/QScrollObserver.js'
 import TouchPan from '../../directives/TouchPan.js'
@@ -125,12 +127,12 @@ export default Vue.extend({
 
     desktopEvents () {
       return this.visible === null
-        ? {
+        ? cache(this, 'desk', {
           // eslint-disable-next-line vue/no-side-effects-in-computed-properties
           mouseenter: () => { this.hover = true },
           // eslint-disable-next-line vue/no-side-effects-in-computed-properties
           mouseleave: () => { this.hover = false }
-        }
+        })
         : null
     }
   },
@@ -290,10 +292,10 @@ export default Vue.extend({
       h('div', {
         ref: 'target',
         staticClass: 'scroll relative-position overflow-hidden fit',
-        on: {
+        on: cache(this, 'wheel', {
           wheel: this.__mouseWheel
-        },
-        directives: [{
+        }),
+        directives: cache(this, 'touch#' + this.horizontal, [{
           name: 'touch-pan',
           modifiers: {
             vertical: !this.horizontal,
@@ -301,35 +303,33 @@ export default Vue.extend({
             mightPrevent: true
           },
           value: this.__panContainer
-        }]
+        }])
       }, [
         h('div', {
           staticClass: 'absolute',
           style: this.mainStyle,
           class: `full-${this.horizontal === true ? 'height' : 'width'}`
-        }, [
+        }, mergeSlot([
           h(WResizeObserver, {
-            on: { resize: this.__updateScrollSize }
+            on: cache(this, 'resizeIn', { resize: this.__updateScrollSize })
           })
-        ].concat(
-          slot(this, 'default')
-        )),
+        ], this, 'default')),
 
         h(WScrollObserver, {
           props: { horizontal: this.horizontal },
-          on: { scroll: this.__updateScroll }
+          on: cache(this, 'scroll', { scroll: this.__updateScroll })
         })
       ]),
 
       h(WResizeObserver, {
-        on: { resize: this.__updateContainer }
+        on: cache(this, 'resizeOut', { resize: this.__updateContainer })
       }),
 
       h('div', {
         staticClass: 'q-scrollarea__thumb',
         style: this.style,
         class: this.thumbClass,
-        directives: this.thumbHidden === true ? null : [{
+        directives: this.thumbHidden === true ? null : cache(this, 'thumb' + this.horizontal, [{
           name: 'touch-pan',
           modifiers: {
             vertical: !this.horizontal,
@@ -339,7 +339,7 @@ export default Vue.extend({
             mouseAllDir: true
           },
           value: this.__panThumb
-        }]
+        }])
       })
     ])
   }

@@ -19,6 +19,8 @@ import RowSelection from './table-row-selection.js'
 import ColumnSelection from './table-column-selection.js'
 import FullscreenMixin from '../../mixins/fullscreen.js'
 
+import { cache } from '../../utils/vm.js'
+
 const commonVirtPropsObj = {}
 commonVirtPropsList.forEach(p => { commonVirtPropsObj[p] = {} })
 
@@ -153,14 +155,23 @@ export default Vue.extend({
         rows = this.filterMethod(rows, this.filter, this.computedCols, this.getCellValue)
       }
 
-      if (this.columnToSort) {
-        rows = this.sortMethod(rows, sortBy, descending)
+      if (this.columnToSort !== void 0) {
+        rows = this.sortMethod(
+          this.data === rows ? rows.slice() : rows,
+          sortBy,
+          descending
+        )
       }
 
       const rowsNumber = rows.length
 
-      if (rowsPerPage) {
-        rows = rows.slice(this.firstRowIndex, this.lastRowIndex)
+      if (rowsPerPage !== 0) {
+        if (this.firstRowIndex === 0 && this.data !== rows) {
+          rows.length = this.lastRowIndex
+        }
+        else {
+          rows = rows.slice(this.firstRowIndex, this.lastRowIndex)
+        }
       }
 
       return { rowsNumber, rows }
@@ -262,9 +273,9 @@ export default Vue.extend({
             items: this.computedRows,
             type: '__qtable'
           },
-          on: {
+          on: cache(this, 'virtScr', {
             'virtual-scroll': this.__onVScroll
-          },
+          }),
           class: this.tableClass,
           style: this.tableStyle,
           scopedSlots: {

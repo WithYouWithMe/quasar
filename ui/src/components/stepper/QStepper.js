@@ -3,8 +3,9 @@ import Vue from 'vue'
 import { PanelParentMixin } from '../../mixins/panel.js'
 import DarkMixin from '../../mixins/dark.js'
 import StepHeader from './StepHeader.js'
-import slot from '../../utils/slot.js'
+import { slot, mergeSlot } from '../../utils/slot.js'
 import { stop } from '../../utils/event.js'
+import { cache } from '../../utils/vm.js'
 
 export default Vue.extend({
   name: 'QStepper',
@@ -57,7 +58,7 @@ export default Vue.extend({
             staticClass: 'q-stepper__content',
             // stop propagation of content emitted @input
             // which would tamper with Panel's model
-            on: { input: stop }
+            on: cache(this, 'stop', { input: stop })
           }, slot(this, 'default'))
         )
       }
@@ -86,9 +87,7 @@ export default Vue.extend({
         h('div', {
           staticClass: 'q-stepper__content q-panel-parent',
           directives: this.panelDirectives
-        }, [
-          this.__getPanelContent(h)
-        ])
+        }, this.__getPanelContent(h))
       )
     },
 
@@ -97,7 +96,7 @@ export default Vue.extend({
         staticClass: 'q-stepper',
         class: this.classes,
         on: this.$listeners
-      }, this.__getContent(h).concat(slot(this, 'navigation')))
+      }, mergeSlot(this.__getContent(h), this, 'navigation'))
     }
   }
 })
