@@ -230,16 +230,20 @@ export function getFonts (defaultFont, defaultFontLabel, defaultFontIcon, fonts 
   return def
 }
 
-export function getLinkEditor (h, vm) {
+export function getLinkEditor (h, vm, ie11) {
   if (vm.caret) {
     const color = vm.toolbarColor || vm.toolbarTextColor
     let link = vm.editLinkUrl
     const updateLink = () => {
       vm.caret.restore()
+
       if (link !== vm.editLinkUrl) {
         document.execCommand('createLink', false, link === '' ? ' ' : link)
       }
+
       vm.editLinkUrl = null
+
+      ie11 === true && vm.$nextTick(vm.__onInput)
     }
 
     return [
@@ -291,6 +295,8 @@ export function getLinkEditor (h, vm) {
               vm.caret.restore()
               document.execCommand('unlink')
               vm.editLinkUrl = null
+
+              ie11 === true && vm.$nextTick(vm.__onInput)
             }
           }
         }),

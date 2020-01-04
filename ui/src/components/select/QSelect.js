@@ -55,7 +55,10 @@ export default Vue.extend({
     maxValues: [Number, String],
 
     optionsDense: Boolean,
-    optionsDark: Boolean,
+    optionsDark: {
+      type: Boolean,
+      default: null
+    },
     optionsSelectedClass: String,
     optionsCover: Boolean,
     optionsSanitize: Boolean,
@@ -109,7 +112,9 @@ export default Vue.extend({
 
   watch: {
     innerValue: {
-      handler () {
+      handler (val) {
+        this.innerValueCache = val
+
         if (
           this.useInput === true &&
           this.fillInput === true &&
@@ -135,7 +140,9 @@ export default Vue.extend({
 
   computed: {
     isOptionsDark () {
-      return this.isDark === true || this.optionsDark === true
+      return this.optionsDark === null
+        ? this.isDark
+        : this.optionsDark
     },
 
     virtualScrollLength () {
@@ -170,13 +177,18 @@ export default Vue.extend({
           ? (this.multiple === true && Array.isArray(this.value) ? this.value : [ this.value ])
           : []
 
-      return this.mapOptions === true && Array.isArray(this.options) === true
-        ? (
-          this.value === null && mapNull === true
-            ? val.map(v => this.__getOption(v)).filter(v => v !== null)
-            : val.map(v => this.__getOption(v))
-        )
-        : val
+      if (this.mapOptions === true && Array.isArray(this.options) === true) {
+        const cache = this.mapOptions === true && this.innerValueCache !== void 0
+          ? this.innerValueCache
+          : []
+        const values = val.map(v => this.__getOption(v, cache))
+
+        return this.value === null && mapNull === true
+          ? values.filter(v => v !== null)
+          : values
+      }
+
+      return val
     },
 
     noOptions () {
@@ -400,8 +412,9 @@ export default Vue.extend({
       }
     },
 
-    __getOption (value) {
-      return this.options.find(opt => isDeepEqual(this.__getOptionValue(opt), value)) || value
+    __getOption (value, innerValueCache) {
+      const fn = opt => isDeepEqual(this.__getOptionValue(opt), value)
+      return this.options.find(fn) || innerValueCache.find(fn) || value
     },
 
     __getOptionValue (opt) {
@@ -809,13 +822,13 @@ export default Vue.extend({
         staticClass: 'q-select__input q-placeholder col',
         style: this.inputStyle,
         class: this.computedInputClass,
-        domProps: { value: this.inputValue },
+        domProps: { value: this.inputValue !== void 0 ? this.inputValue : '' },
         attrs: {
           // required for Android in order to show ENTER key when in form
           type: 'search',
           ...this.$attrs,
           tabindex: this.tabindex,
-          autofocus: fromDialog === true ? false : this.autofocus,
+          'data-autofocus': fromDialog === true ? false : this.autofocus,
           id: this.targetUid,
           disabled: this.disable === true,
           readonly: this.readonly === true
@@ -1018,11 +1031,9 @@ export default Vue.extend({
       const content = [
         h(WField, {
           staticClass: `col-auto ${this.fieldClass}`,
-          attrs: {
-            for: this.targetUid
-          },
           props: {
             ...this.$props,
+            for: this.targetUid,
             dark: this.isOptionsDark,
             square: true,
             loading: this.innerLoading,

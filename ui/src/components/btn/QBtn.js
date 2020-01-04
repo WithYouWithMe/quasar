@@ -41,8 +41,11 @@ export default Vue.extend({
         )
     },
 
-    computedPercentage () {
-      return Math.max(0, Math.min(100, this.percentage))
+    percentageStyle () {
+      const val = Math.max(0, Math.min(100, this.percentage))
+      if (val > 0) {
+        return { transition: 'transform 0.6s', transform: `translateX(${val - 100}%)` }
+      }
     }
   },
 
@@ -135,6 +138,7 @@ export default Vue.extend({
       if (mouseTarget !== this.$el) {
         mouseTarget !== void 0 && this.__cleanup()
         mouseTarget = this.$el
+        this.$el.classList.add('q-btn--active')
         document.addEventListener('mouseup', this.__onPressEnd, passiveCapture)
       }
 
@@ -264,19 +268,19 @@ export default Vue.extend({
 
     this.loading === true && this.percentage !== void 0 && child.push(
       h('div', {
-        staticClass: 'q-btn__progress absolute-full'
+        staticClass: 'q-btn__progress absolute-full overflow-hidden'
       }, [
         h('div', {
-          staticClass: 'q-btn__progress-indicator absolute-full',
+          staticClass: 'q-btn__progress-indicator fit',
           class: this.darkPercentage === true ? 'q-btn__progress--dark' : '',
-          style: { transform: `scale(${this.computedPercentage / 100},1)` }
+          style: this.percentageStyle
         })
       ])
     )
 
     child.push(
       h('div', {
-        staticClass: 'q-btn__wrapper col row no-wrap q-anchor--skip'
+        staticClass: 'q-btn__wrapper col row q-anchor--skip'
       }, [
         h('div', {
           staticClass: 'q-btn__content text-center col items-center q-anchor--skip',

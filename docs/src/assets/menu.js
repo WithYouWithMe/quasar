@@ -31,7 +31,6 @@ const gettingStarted = [
   },
   {
     name: 'Release notes',
-    badge: 'updated',
     path: 'release-notes'
   },
   {
@@ -55,23 +54,19 @@ const contributionGuide = [
   },
   {
     name: 'Running Projects',
-    path: 'running-projects',
-    badge: 'new'
+    path: 'running-projects'
   },
   {
     name: 'Start a New Project',
-    path: 'new-project',
-    badge: 'new'
+    path: 'new-project'
   },
   {
     name: 'Project Maintainer Role',
-    path: 'project-maintainer',
-    badge: 'new'
+    path: 'project-maintainer'
   },
   {
     name: 'Commit Conventions',
-    path: 'commit-conventions',
-    badge: 'new'
+    path: 'commit-conventions'
   }
 ]
 
@@ -935,6 +930,11 @@ const components = [
     path: 'separator'
   },
   {
+    name: 'Skeleton',
+    badge: 'new',
+    path: 'skeleton'
+  },
+  {
     name: 'Slide Item',
     path: 'slide-item'
   },
@@ -985,6 +985,7 @@ const components = [
   },
   {
     name: 'Tree',
+    badge: 'update',
     path: 'tree'
   },
   {
@@ -997,7 +998,6 @@ const components = [
   },
   {
     name: 'Virtual Scroll',
-    badge: 'new',
     path: 'virtual-scroll'
   }
 ]

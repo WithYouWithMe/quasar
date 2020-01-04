@@ -33,7 +33,6 @@
 
   /* Flex Basis */
   .q-btn__wrapper,
-  .q-btn__content,
   .q-time__content,
   .q-toolbar__title,
   .q-menu .q-item__section--main
@@ -76,14 +75,20 @@
     .q-btn__wrapper
       margin: -1px 1px 1px -1px
 
-  .q-btn-group--push
-    > button.q-btn--push.q-btn--actionable:active:hover
-      .q-btn__wrapper
-        margin: 1px 1px -1px -1px
+  .q-btn-group
+    &--push
+      > button.q-btn--push.q-btn--actionable:active:hover
+        .q-btn__wrapper
+          margin: 1px 1px -1px -1px
+    > .q-btn
+      > .q-focus-helper
+        z-index: -1
 
   .q-btn
-    display: inline-flex
-    flex-wrap: nowrap
+    overflow: visible
+
+    &--wrap
+      flex-direction: row
 
   /* QCarousel */
   .q-carousel__slide > *
@@ -96,8 +101,8 @@
 
   /* QSpinner */
   .q-spinner
-    animation: q-ie-spinner 2s linear infinite /* rtl:ignore */
-    transform-origin: center center /* rtl:ignore */
+    animation: q-ie-spinner 2s linear infinite #{"/* rtl:ignore */"}
+    transform-origin: center center #{"/* rtl:ignore */"}
     opacity: .5
 
     &.q-spinner-mat .path
@@ -113,7 +118,7 @@
     min-height: 290px !important
   .q-date__months
     align-items: stretch
-  .q-time--portrait .q-time__main,
+  .q-time--portrait .q-time__main
     display: flex
     flex-direction: column
     flex-wrap: nowrap
