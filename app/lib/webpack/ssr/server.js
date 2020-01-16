@@ -31,7 +31,7 @@ module.exports = function (chain, cfg) {
   chain.externals(nodeExternals({
     // do not externalize CSS files in case we need to import it from a dep
     whitelist: [
-      /(\.(vue|css|styl|scss|sass|less)$|\?vue&type=style|^quasar[\\/]src[\\/]|^quasar[\\/]lang[\\/]|^quasar[\\/]icon-set[\\/])/
+      /(\.(vue|css|styl|scss|sass|less)$|\?vue&type=style|^quasar[\\/]src[\\/]|^quasar[\\/]lang[\\/]|^quasar[\\/]icon-set[\\/]|^@quasar[\\/]extras[\\/])/
     ].concat(cfg.build.transpileDependencies)
   }))
 
@@ -46,12 +46,8 @@ module.exports = function (chain, cfg) {
       .use(SsrProdArtifacts, [ cfg ])
 
     const fs = require('fs')
-    const copyArray = [{
-      // copy src-ssr to dist folder in /server
-      from: cfg.ssr.__dir,
-      to: '../server',
-      ignore: ['.*']
-    }]
+    const copyArray = []
+
     const npmrc = appPaths.resolve.app('.npmrc')
     const yarnrc = appPaths.resolve.app('.yarnrc')
 

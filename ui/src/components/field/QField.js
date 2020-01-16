@@ -32,6 +32,7 @@ export default Vue.extend({
     prefix: String,
     suffix: String,
 
+    labelColor: String,
     color: String,
     bgColor: String,
 
@@ -113,8 +114,7 @@ export default Vue.extend({
     },
 
     floatingLabel () {
-      return this.hasError === true ||
-        this.stackLabel === true ||
+      return this.stackLabel === true ||
         this.focused === true ||
         (
           this.inputValue !== void 0 && this.hideSelected === true
@@ -188,6 +188,15 @@ export default Vue.extend({
       }
 
       return cls
+    },
+
+    labelClass () {
+      if (
+        this.labelColor !== void 0 &&
+        this.hasError !== true
+      ) {
+        return 'text-' + this.labelColor
+      }
     },
 
     controlSlotScope () {
@@ -329,7 +338,8 @@ export default Vue.extend({
 
       this.label !== void 0 && node.push(
         h('div', {
-          staticClass: 'q-field__label no-pointer-events absolute ellipsis'
+          staticClass: 'q-field__label no-pointer-events absolute ellipsis',
+          class: this.labelClass
         }, [ this.label ])
       )
 
