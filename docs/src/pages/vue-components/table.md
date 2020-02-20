@@ -73,7 +73,7 @@ columns: [ // array of Objects
     style: 'width: 500px',
     classes: 'my-special-class'
 
-    // (v1.3.0+) header th:
+    // (v1.3+) header th:
     headerStyle: 'width: 500px',
     headerClasses: 'my-special-class'
   },
@@ -126,13 +126,15 @@ Sticky headers and columns are achieved through CSS with `position: sticky`. Thi
 
 <doc-example title="No header/footer" file="QTable/NoHeaderFooter" />
 
-### Virtual scrolling
-
-<q-badge label="v1.2+" />
+### Virtual scrolling <q-badge align="top" label="v1.2+" />
 
 Notice that when enabling virtual scroll you will need to specify the `table-style` (with a max-height) prop. In the example below, we are also forcing QTable to display all rows at once (note the use of `pagination` and `rows-per-page-options` props).
 
 <doc-example title="Basic virtual scroll" file="QTable/VirtscrollBasic" />
+
+You can dynamically load new rows when scroll reaches the end:
+
+<doc-example title="Dynamic loading virtual scroll" file="QTable/VirtscrollDynamic" />
 
 You can have both virtual scroll and pagination:
 
@@ -141,6 +143,12 @@ You can have both virtual scroll and pagination:
 The example below shows how virtual scroll can be used along with a sticky header. Notice the `virtual-scroll-sticky-start` prop which is set to the header height. Also note that this will NOT work in IE11 due to the lack of support for CSS prop "position" with value "sticky".
 
 <doc-example title="Virtual scroll with sticky header" file="QTable/VirtscrollSticky" />
+
+Starting with v1.8.4, there are 2 utility CSS classes that control VirtualScroll size calculation:
+* Use `q-virtual-scroll--with-prev` class on an element rendered by the VirtualScroll to indicate that the element should be grouped with the previous one (main use case is for multiple table rows generated from the same row of data).
+* Use `q-virtual-scroll--skip` class on an element rendered by the VirtualScroll to indicate that the element's size should be ignored in size calculations.
+
+<doc-example title="Virtual scroll with multiple rows for a data row" file="QTable/VirtscrollMultipleRows" />
 
 ### Selection
 
@@ -153,6 +161,8 @@ The property `row-key` must be set in order for selection to work properly.
 <doc-example title="Multiple selection" file="QTable/MultipleSelection" />
 
 ### Visible columns, custom top, fullscreen
+
+Please note that columns marked as `required` (in the column definition) cannot be toggled and are always visible.
 
 <doc-example title="Visible columns, custom top and fullscreen" file="QTable/VisibleColumns" />
 
@@ -188,7 +198,21 @@ However, if you want to fully customize the content, check the example below, wh
 
 ### Expanding rows
 
-<doc-example title="Expanded row" file="QTable/ExpandedRow" />
+::: warning
+Add unique (distinct) `key` on QTr if you generate more than one QTr from a row in data.
+:::
+
+<doc-example title="Internal expansion model" file="QTable/ExpandedRowInternal" />
+
+Starting with v1.8.3, an external expansion model can also be used:
+
+<doc-example title="External expansion model" file="QTable/ExpandedRowExternal" />
+
+If you are using virtual scroll with QTable, you should know that starting with v1.8.4 there are 2 utility CSS classes that control VirtualScroll size calculation:
+* Use `q-virtual-scroll--with-prev` class on an element rendered by the VirtualScroll to indicate that the element should be grouped with the previous one (main use case is for multiple table rows generated from the same row of data).
+* Use `q-virtual-scroll--skip` class on an element rendered by the VirtualScroll to indicate that the element's size should be ignored in size calculations.
+
+<doc-example title="Virtual scroll with expansion model" file="QTable/VirtscrollExpandedRow" />
 
 ### Before/after slots
 

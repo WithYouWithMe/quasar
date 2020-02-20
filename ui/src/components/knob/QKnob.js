@@ -6,6 +6,7 @@ import { slot } from '../../utils/slot.js'
 import { cache } from '../../utils/vm.js'
 
 import WCircularProgress from '../circular-progress/QCircularProgress.js'
+import FormMixin from '../../mixins/form.js'
 import TouchPan from '../../directives/TouchPan.js'
 
 // PGDOWN, LEFT, DOWN, PGUP, RIGHT, UP
@@ -14,9 +15,10 @@ const keyCodes = [34, 37, 40, 33, 39, 38]
 export default Vue.extend({
   name: 'WKnob',
 
-  mixins: [{
-    props: WCircularProgress.options.props
-  }],
+  mixins: [
+    { props: WCircularProgress.options.props },
+    FormMixin
+  ],
 
   directives: {
     TouchPan
@@ -214,6 +216,10 @@ export default Vue.extend({
     __updateValue (change) {
       this.value !== this.model && this.$emit('input', this.model)
       change === true && this.$emit('change', this.model)
+    },
+
+    __getNameInput () {
+      return this.$createElement('input', { attrs: this.formAttrs })
     }
   },
 
@@ -241,6 +247,12 @@ export default Vue.extend({
           mouse: true
         }
       }])
+
+      if (this.name !== void 0) {
+        data.scopedSlots = {
+          internal: this.__getNameInput
+        }
+      }
     }
 
     return h(WCircularProgress, data, slot(this, 'default'))

@@ -16,6 +16,7 @@ import Sort from './table-sort.js'
 import Filter from './table-filter.js'
 import Pagination from './table-pagination.js'
 import RowSelection from './table-row-selection.js'
+import RowExpand from './table-row-expand.js'
 import ColumnSelection from './table-column-selection.js'
 import FullscreenMixin from '../../mixins/fullscreen.js'
 
@@ -40,6 +41,7 @@ export default Vue.extend({
     Filter,
     Pagination,
     RowSelection,
+    RowExpand,
     ColumnSelection
   ],
 
@@ -103,7 +105,6 @@ export default Vue.extend({
 
   data () {
     return {
-      rowsExpanded: {},
       innerPagination: {
         sortBy: null,
         descending: false,
@@ -146,7 +147,10 @@ export default Vue.extend({
       }
 
       if (this.isServerSide === true) {
-        return { rows }
+        return {
+          rowsNumber: rows.length,
+          rows
+        }
       }
 
       const { sortBy, descending, rowsPerPage } = this.computedPagination
@@ -206,7 +210,7 @@ export default Vue.extend({
     },
 
     containerClass () {
-      return `q-table__container q-table--${this.separator}-separator` +
+      return `q-table__container q-table--${this.separator}-separator column no-wrap` +
         (this.loading === true ? ' q-table--loading' : '') +
         (this.grid === true ? ' q-table--grid' : this.cardDefaultClass) +
         (this.isDark === true ? ` q-table--dark` : '') +

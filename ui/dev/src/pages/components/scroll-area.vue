@@ -2,10 +2,13 @@
   <div class="q-layout-padding">
     <q-toggle v-model="horizontal" label="Horizontal" />
     <q-toggle v-model="customStyle" label="Custom style" />
-    <q-checkbox v-model="alwaysVisible" toggle-indeterminate label="Always visible" />
+    <q-toggle v-model="alwaysVisible" toggle-indeterminate label="Always visible" />
+    <q-toggle v-model="darkVariant" toggle-indeterminate label="Dark variant" />
 
     <div style="height: 300px;" />
+
     <q-scroll-area
+      v-if="!darkVariant"
       ref="scroll"
       style="width: 400px; height: 500px;"
       class="bg-yellow"
@@ -17,7 +20,26 @@
       <div :class="{ 'flex no-wrap' : horizontal }">
         <div style="margin-top: 150px" />
         <div style="margin-bottom: 25px" :style="horizontal ? 'width: 160px' : ''" v-for="n in number" :key="n">
-          {{ n }} Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. <q-btn>Click</q-btn>
+          {{ n }} Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+          <q-btn label="Click" color="primary" />
+        </div>
+      </div>
+    </q-scroll-area>
+
+    <q-scroll-area
+      v-else
+      ref="scroll"
+      style="width: 400px; height: 500px;"
+      class="bg-dark text-white q-mt-lg"
+      :horizontal="horizontal"
+      :visible="alwaysVisible"
+      dark
+    >
+      <div :class="{ 'flex no-wrap' : horizontal }">
+        <div style="margin-top: 150px" />
+        <div style="margin-bottom: 25px" :style="horizontal ? 'width: 160px' : ''" v-for="n in number" :key="n">
+          {{ n }} Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+          <q-btn label="Click" color="primary" />
         </div>
       </div>
     </q-scroll-area>
@@ -44,6 +66,7 @@
 export default {
   data () {
     return {
+      darkVariant: false,
       number: 10,
       horizontal: false,
       alwaysVisible: true,

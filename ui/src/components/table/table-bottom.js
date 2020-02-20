@@ -19,9 +19,9 @@ export default {
       }
 
       if (this.nothingToDisplay === true) {
-        const message = this.filter
-          ? this.noResultsLabel || this.$q.lang.table.noResults
-          : (this.loading === true ? this.loadingLabel || this.$q.lang.table.loading : this.noDataLabel || this.$q.lang.table.noData)
+        const message = this.loading === true
+          ? this.loadingLabel || this.$q.lang.table.loading
+          : (this.filter ? this.noResultsLabel || this.$q.lang.table.noResults : this.noDataLabel || this.$q.lang.table.noData)
 
         const noData = this.$scopedSlots['no-data']
         const children = noData !== void 0
@@ -109,7 +109,7 @@ export default {
           h('span', rowsPerPage !== 0 ? { staticClass: 'q-table__bottom-item' } : {}, [
             rowsPerPage
               ? paginationLabel(this.firstRowIndex + 1, Math.min(this.lastRowIndex, this.computedRowsNumber), this.computedRowsNumber)
-              : paginationLabel(1, this.computedRowsNumber, this.computedRowsNumber)
+              : paginationLabel(1, this.computedData.rowsNumber, this.computedRowsNumber)
           ])
         ]
 

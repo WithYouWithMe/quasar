@@ -64,8 +64,8 @@ export default {
       }
     },
 
-    isRound () {
-      return this.round === true || this.fab === true || this.fabMini === true
+    isRounded () {
+      return this.rounded === true || this.fab === true || this.fabMini === true
     },
 
     isActionable () {
@@ -121,13 +121,13 @@ export default {
         colors = `text-${this.textColor}`
       }
 
-      return `q-btn--${this.design} q-btn--${this.isRound === true ? 'round' : 'rectangle'}` +
+      return `q-btn--${this.design} ` +
+        `q-btn--${this.round === true ? 'round' : `rectangle${this.isRounded === true ? ' q-btn--rounded' : ''}`}` +
         (colors !== void 0 ? ' ' + colors : '') +
         (this.isActionable === true ? ' q-btn--actionable q-focusable q-hoverable' : (this.disable === true ? ' disabled' : '')) +
         (this.fab === true ? ' q-btn--fab' : (this.fabMini === true ? ' q-btn--fab-mini' : '')) +
         (this.noCaps === true ? ' q-btn--no-uppercase' : '') +
         (this.noWrap === true ? '' : ' q-btn--wrap') + // this is for IE11
-        (this.rounded === true && this.isRound !== true ? ' q-btn--rounded' : '') +
         (this.dense === true ? ' q-btn--dense' : '') +
         (this.stretch === true ? ' no-border-radius self-stretch' : '') +
         (this.glossy === true ? ' glossy' : '')

@@ -595,11 +595,8 @@ const layout = [
   },
   {
     name: 'Page Scroller',
+    badge: 'update',
     path: 'page-scroller'
-  },
-  {
-    name: 'Floating Action Button',
-    path: 'floating-action-button'
   }
 ]
 
@@ -698,6 +695,7 @@ const plugins = [
   },
   {
     name: 'Notify',
+    badge: 'update',
     path: 'notify'
   }
 ]
@@ -752,6 +750,7 @@ const components = [
   },
   {
     name: 'Carousel',
+    badge: 'update',
     path: 'carousel'
   },
   {
@@ -781,6 +780,11 @@ const components = [
   {
     name: 'Expansion Item',
     path: 'expansion-item'
+  },
+  {
+    name: 'Floating Action Button',
+    badge: 'update',
+    path: 'floating-action-button'
   },
   {
     name: 'Form Components',
@@ -933,7 +937,13 @@ const components = [
     path: 'rating'
   },
   {
+    name: 'Responsive',
+    badge: 'new',
+    path: 'responsive'
+  },
+  {
     name: 'Scroll Area',
+    badge: 'update',
     path: 'scroll-area'
   },
   {
@@ -980,6 +990,7 @@ const components = [
   },
   {
     name: 'Tab Panels',
+    badge: 'update',
     path: 'tab-panels'
   },
   {

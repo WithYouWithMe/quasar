@@ -63,6 +63,12 @@ Under the covers, QFile uses a native input. Due to browser security policy, it 
 
 <doc-example title="With chips" file="QFile/WithChips" />
 
+### Using file slot
+
+The example below highlights how you can customize the display of each file and even incorporate a possible upload progress indicator:
+
+<doc-example title="With progress indicator" file="QFile/WithProgress" />
+
 ### Restricting files
 
 <doc-example title="Basic restrictions" file="QFile/RestrictionBasic" />
@@ -80,6 +86,13 @@ Recommended format for the `accept` property is `<mediatype>/<extension>`. Examp
 You can also apply custom filters (which are executed after user picks files):
 
 <doc-example title="Filter" file="QFile/RestrictionFilter" />
+
+
+### Native form submit <q-badge align="top" label="v1.9+" />
+
+When dealing with a native form which has an `action` and a `method` (eg. when using Quasar with ASP.NET controllers), you need to specify the `name` property on QFile, otherwise formData will not contain it (if it should):
+
+<doc-example title="Native form" file="QFile/NativeForm" />
 
 ## QFile API
 <doc-api file="QFile" />

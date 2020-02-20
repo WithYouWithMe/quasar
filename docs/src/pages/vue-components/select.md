@@ -122,6 +122,10 @@ The following example shows a glimpse of how you can play with lazy loading the 
 
 <doc-example title="Lazy load options" file="QSelect/OptionLazyLoad" />
 
+You can dynamically load new options when scroll reaches the end:
+
+<doc-example title="Dynamic loading options" file="QSelect/OptionsDynamic" />
+
 ### Cover mode
 
 <doc-example title="Menu covering component" file="QSelect/OptionCover" />
@@ -189,6 +193,10 @@ Filters new values (in the example below the value to be added requires at least
 
 <doc-example title="Filtering without adding to menu" file="QSelect/FilteringNoAddToMenu" />
 
+Generating multiple values from input:
+
+<doc-example title="Generating multiple values" file="QSelect/FilteringAddMultiple" />
+
 ## Sanitization
 
 ::: warning
@@ -248,6 +256,12 @@ When the list of options is opened:
   - pressing <kbd>ENTER</kbd> (or <kbd>SPACE</kbd> when `use-input` is not set, or <kbd>TAB</kbd> when `multiple` is not set) when an option is selected in the list will:
     - select the option and close the list of options if `multiple` is not set
     - toggle the option if `multiple` is set
+
+## Native form submit <q-badge align="top" label="v1.9+" />
+
+When dealing with a native form which has an `action` and a `method` (eg. when using Quasar with ASP.NET controllers), you need to specify the `name` property on QSelect, otherwise formData will not contain it (if it should) - all value are converted to string (native behaviour, so do not use Object values):
+
+<doc-example title="Native form" file="QSelect/NativeForm" />
 
 ## QSelect API
 <doc-api file="QSelect" />

@@ -5,7 +5,9 @@
         src="https://cdn.quasar.dev/img/image-src.png"
         srcset="https://cdn.quasar.dev/img/image-1x.png 300w, https://cdn.quasar.dev/img/image-2x.png 2x,
           https://cdn.quasar.dev/img/image-3x.png 3x, https://cdn.quasar.dev/img/image-4x.png 4x"
+        height="280px"
         style="height: 280px; max-width: 300px"
+        :native-context-menu="nativeContextMenu"
       >
         <div class="absolute-bottom text-body1 text-center">
           With srcset
@@ -20,21 +22,37 @@
           (min-width: 400px) and (max-width: 800px) 800w,
           (min-width: 800px) and (max-width: 1200px) 1200w,
           (min-width: 1200px) 1600w"
-        style="height: 280px; max-width: 300px"
+        height="280px"
+        style="max-width: 300px"
+        :native-context-menu="nativeContextMenu"
       >
         <div class="absolute-bottom text-body1 text-center">
           With srcset & sizes
         </div>
       </q-img>
+
+      <q-img
+        src="https://cdn.quasar.dev/img/image-src.png"
+        height="220px"
+        width="220px"
+        :native-context-menu="nativeContextMenu"
+      >
+        <div class="absolute-bottom text-body1 text-center">
+          With forced width & height
+        </div>
+      </q-img>
+
     </div>
 
     <q-btn push color="teal" label="Refresh" @click="refresh" class="q-my-lg" />
+    <q-toggle v-model="nativeContextMenu" label="Enable context menu" />
 
     <div class="q-gutter-lg row items-start">
       <q-img
         :src="url"
         alt="Image"
         style="max-width: 400px"
+        :native-context-menu="nativeContextMenu"
       >
         <div slot="loading" class="text-h2 text-white">
           Loading...
@@ -45,6 +63,7 @@
         :src="url"
         alt="Image"
         style="max-width: 400px; border-radius: 50%"
+        :native-context-menu="nativeContextMenu"
       >
         <div class="absolute-bottom text-subtitle1 text-center q-pa-xs">
           Radius 50%
@@ -55,6 +74,7 @@
         :src="url"
         alt="Image"
         style="max-width: 400px; border-radius: 15px"
+        :native-context-menu="nativeContextMenu"
       >
         <div class="absolute-bottom text-subtitle1 text-center q-pa-xs">
           Radius 15px
@@ -66,6 +86,7 @@
         alt="Image"
         style="max-width: 400px"
         img-class="blurry"
+        :native-context-menu="nativeContextMenu"
       >
         <div slot="loading" class="text-h2 text-white">
           Loading...
@@ -82,6 +103,7 @@
         :ratio="16/9"
         spinner-color="white"
         style="max-width: 400px"
+        :native-context-menu="nativeContextMenu"
       >
         <div class="absolute-bottom text-subtitle1 text-center q-pa-xs">
           Caption
@@ -95,6 +117,7 @@
         spinner-color="white"
         style="max-width: 400px"
         transition="slide-left"
+        :native-context-menu="nativeContextMenu"
       />
 
       <q-img
@@ -104,6 +127,7 @@
         ratio="1"
         class="rounded-borders"
         style="max-width: 225px"
+        :native-context-menu="nativeContextMenu"
       />
 
       <q-img
@@ -113,6 +137,7 @@
         transition="slide-up"
         spinner-color="white"
         style="max-width: 225px"
+        :native-context-menu="nativeContextMenu"
       >
         <q-spinner-facebook slot="loading" color="white" />
       </q-img>
@@ -123,6 +148,7 @@
         placeholder-src="https://picsum.photos/500/300/?blur"
         contain
         style="max-width: 400px; height: 200px"
+        :native-context-menu="nativeContextMenu"
       >
         <div class="absolute-bottom text-body1 text-center">
           Contain
@@ -139,6 +165,7 @@
         :src="bogusSrc"
         spinner-color="white"
         style="min-height: 100px; max-width: 225px"
+        :native-context-menu="nativeContextMenu"
       >
         <div slot="error">
           Error...
@@ -153,7 +180,8 @@ export default {
   data () {
     return {
       url: 'https://placeimg.com/500/300/nature',
-      bogusSrc: 'https://bogu.bogus'
+      bogusSrc: 'https://bogu.bogus',
+      nativeContextMenu: false
     }
   },
 

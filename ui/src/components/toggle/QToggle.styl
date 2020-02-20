@@ -20,6 +20,7 @@ $toggle-transition = .22s cubic-bezier(.4,0,.2,1)
     height: .5em
     transition: left $toggle-transition
     user-select: none
+    z-index: 0
 
     &:after
       content: ''
@@ -124,8 +125,9 @@ body.desktop
       .q-toggle__thumb:before
         transform: scale3d(2, 2, 1)
 
-    &--dense:focus,
-    &--dense:hover
+  .q-toggle--dense:not(.disabled)
+    &:focus,
+    &:hover
       .q-toggle__thumb:before
         transform: scale3d(1.5, 1.5, 1)
 

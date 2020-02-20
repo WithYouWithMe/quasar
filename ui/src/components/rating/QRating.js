@@ -3,7 +3,9 @@ import Vue from 'vue'
 import { stopAndPrevent } from '../../utils/event.js'
 import { between } from '../../utils/format.js'
 import WIcon from '../icon/QIcon.js'
+
 import SizeMixin from '../../mixins/size.js'
+import FormMixin from '../../mixins/form.js'
 
 import { cache } from '../../utils/vm.js'
 import { slot } from '../../utils/slot.js'
@@ -11,7 +13,7 @@ import { slot } from '../../utils/slot.js'
 export default Vue.extend({
   name: 'WRating',
 
-  mixins: [ SizeMixin ],
+  mixins: [ SizeMixin, FormMixin ],
 
   props: {
     value: {
@@ -177,6 +179,10 @@ export default Vue.extend({
           })
         }, slot(this, `tip-${i}`))
       )
+    }
+
+    if (this.name !== void 0 && this.disable !== true) {
+      this.__injectFormInput(child, 'push')
     }
 
     return h('div', {

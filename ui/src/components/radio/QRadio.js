@@ -2,6 +2,7 @@ import Vue from 'vue'
 
 import DarkMixin from '../../mixins/dark.js'
 import OptionSizeMixin from '../../mixins/option-size.js'
+import FormMixin from '../../mixins/form.js'
 
 import { stopAndPrevent } from '../../utils/event.js'
 import { slot, mergeSlot } from '../../utils/slot.js'
@@ -10,7 +11,7 @@ import { cache } from '../../utils/vm.js'
 export default Vue.extend({
   name: 'WRadio',
 
-  mixins: [ DarkMixin, OptionSizeMixin ],
+  mixins: [ DarkMixin, OptionSizeMixin, FormMixin ],
 
   props: {
     value: {
@@ -37,12 +38,11 @@ export default Vue.extend({
     },
 
     classes () {
-      return {
-        'disabled': this.disable,
-        'q-radio--dark': this.isDark,
-        'q-radio--dense': this.dense,
-        'reverse': this.leftLabel
-      }
+      return 'q-radio cursor-pointer no-outline row inline no-wrap items-center' +
+        (this.disable === true ? ' disabled' : '') +
+        (this.isDark === true ? ' q-radio--dark' : '') +
+        (this.dense === true ? ' q-radio--dense' : '') +
+        (this.leftLabel === true ? ' reverse' : '')
     },
 
     innerClass () {
@@ -58,6 +58,23 @@ export default Vue.extend({
 
     computedTabindex () {
       return this.disable === true ? -1 : this.tabindex || 0
+    },
+
+    formAttrs () {
+      const prop = { type: 'radio' }
+
+      this.name !== void 0 && Object.assign(prop, {
+        name: this.name,
+        value: this.val
+      })
+
+      return prop
+    },
+
+    formDomProps () {
+      if (this.name !== void 0 && this.isTrue === true) {
+        return { checked: true }
+      }
     }
   },
 
@@ -95,11 +112,10 @@ export default Vue.extend({
       ])
     ]
 
-    this.disable !== true && content.unshift(
-      h('input', {
-        staticClass: 'q-radio__native q-ma-none q-pa-none invisible',
-        attrs: { type: 'radio' }
-      })
+    this.disable !== true && this.__injectFormInput(
+      content,
+      'unshift',
+      'q-radio__native q-ma-none q-pa-none invisible'
     )
 
     const child = [
@@ -121,7 +137,6 @@ export default Vue.extend({
     )
 
     return h('div', {
-      staticClass: 'q-radio cursor-pointer no-outline row inline no-wrap items-center',
       class: this.classes,
       attrs: { tabindex: this.computedTabindex },
       on: cache(this, 'inpExt', {

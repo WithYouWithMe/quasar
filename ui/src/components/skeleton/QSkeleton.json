@@ -1,6 +1,12 @@
 {
+  "mixins": [ "mixins/tag" ],
+
   "meta": {
     "docsUrl": "https://v1.quasar.dev/vue-components/skeleton"
+  },
+
+  "behavior": {
+    "$listeners": true
   },
 
   "props": {
@@ -62,11 +68,7 @@
     },
 
     "tag": {
-      "type": "String",
-      "desc": "HTML tag to render",
-      "default": "div",
-      "examples": [ "div", "span" ],
-      "category": "content"
+      "examples": [ "div", "span" ]
     }
   },
 

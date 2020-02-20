@@ -5,6 +5,10 @@
     "docsUrl": "https://v1.quasar.dev/vue-components/option-group"
   },
 
+  "behavior": {
+    "$listeners": true
+  },
+
   "props": {
     "value": {
       "extends": "value",
@@ -20,6 +24,14 @@
         ":options=\"[ { label: 'Option 1', value: 'op1' }, { label: 'Option 2', value: 'op2' }, { label: 'Option 3', value: 'op3' } ]\""
       ],
       "category": "model"
+    },
+
+    "name": {
+      "type": "String",
+      "desc": "Used to specify the name of the controls; Useful if dealing with forms submitted directly to a URL",
+      "examples": [ "car_id" ],
+      "category": "behavior",
+      "addedIn": "v1.9.0"
     },
 
     "type": {

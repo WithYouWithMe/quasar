@@ -194,6 +194,10 @@ export default Vue.extend({
       )
     }
 
+    if (this.name !== void 0 && this.disable !== true) {
+      this.__injectFormInput(child, 'push')
+    }
+
     const track = [
       h('div', {
         staticClass: 'q-slider__track absolute',
@@ -234,7 +238,7 @@ export default Vue.extend({
       }]) : null
     }, [
       h('div', {
-        staticClass: 'q-slider__track-container absolute overflow-hidden'
+        staticClass: 'q-slider__track-container absolute'
       }, track),
 
       h('div', {
