@@ -1,7 +1,7 @@
 import WCheckbox from '../checkbox/QCheckbox.js'
 import WTh from './QTh.js'
 
-import { cache } from '../../utils/vm.js'
+import cache from '../../utils/cache.js'
 
 export default {
   methods: {

@@ -2,10 +2,14 @@ import Vue from 'vue'
 
 import WIcon from '../icon/QIcon.js'
 
+import ListenersMixin from '../../mixins/listeners.js'
+
 import { slot, uniqueSlot } from '../../utils/slot.js'
 
 export default Vue.extend({
   name: 'WTh',
+
+  mixins: [ ListenersMixin ],
 
   props: {
     props: Object,
@@ -13,7 +17,7 @@ export default Vue.extend({
   },
 
   render (h) {
-    const on = this.$listeners
+    const on = this.qListeners
 
     if (this.props === void 0) {
       return h('th', {

@@ -2,7 +2,7 @@ import WSelect from '../select/QSelect.js'
 import WBtn from '../btn/QBtn.js'
 import WIcon from '../icon/QIcon.js'
 
-import { cache } from '../../utils/vm.js'
+import cache from '../../utils/cache.js'
 
 export default {
   computed: {

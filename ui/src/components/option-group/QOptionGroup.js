@@ -5,8 +5,9 @@ import WCheckbox from '../checkbox/QCheckbox.js'
 import WToggle from '../toggle/QToggle.js'
 
 import DarkMixin from '../../mixins/dark.js'
+import ListenersMixin from '../../mixins/listeners.js'
 
-import { cache } from '../../utils/vm.js'
+import cache from '../../utils/cache.js'
 
 const components = {
   radio: WRadio,
@@ -19,7 +20,7 @@ const typeValues = Object.keys(components)
 export default Vue.extend({
   name: 'WOptionGroup',
 
-  mixins: [ DarkMixin ],
+  mixins: [ DarkMixin, ListenersMixin ],
 
   props: {
     value: {
@@ -104,7 +105,7 @@ export default Vue.extend({
     return h('div', {
       class: this.classes,
       attrs: this.attrs,
-      on: this.$listeners
+      on: this.qListeners
     }, this.options.map(opt => h('div', [
       h(this.component, {
         props: {

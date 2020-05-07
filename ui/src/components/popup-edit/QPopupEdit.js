@@ -3,14 +3,18 @@ import Vue from 'vue'
 import WMenu from '../menu/QMenu.js'
 import WBtn from '../btn/QBtn.js'
 
+import AttrsMixin from '../../mixins/attrs.js'
+
 import clone from '../../utils/clone.js'
 import { isDeepEqual } from '../../utils/is.js'
 import { slot } from '../../utils/slot.js'
 import { isKeyCode } from '../../utils/key-composition.js'
-import { cache } from '../../utils/vm.js'
+import cache from '../../utils/cache.js'
 
 export default Vue.extend({
   name: 'WPopupEdit',
+
+  mixins: [ AttrsMixin ],
 
   props: {
     value: {
@@ -63,6 +67,14 @@ export default Vue.extend({
         validate: this.validate,
         set: this.set,
         cancel: this.cancel
+      }
+    },
+
+    menuProps () {
+      return {
+        ...this.qAttrs,
+        cover: this.cover,
+        contentClass: this.classes
       }
     }
   },
@@ -148,11 +160,7 @@ export default Vue.extend({
 
     return h(WMenu, {
       ref: 'menu',
-      props: {
-        ...this.$attrs,
-        cover: this.cover,
-        contentClass: this.classes
-      },
+      props: this.menuProps,
       on: cache(this, 'menu', {
         'before-show': () => {
           this.validated = false

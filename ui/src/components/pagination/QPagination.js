@@ -4,16 +4,17 @@ import WBtn from '../btn/QBtn.js'
 import WInput from '../input/QInput.js'
 
 import DarkMixin from '../../mixins/dark.js'
+import ListenersMixin from '../../mixins/listeners.js'
 
 import { stop } from '../../utils/event.js'
 import { between } from '../../utils/format.js'
 import { isKeyCode } from '../../utils/key-composition.js'
-import { cache } from '../../utils/vm.js'
+import cache from '../../utils/cache.js'
 
 export default Vue.extend({
   name: 'WPagination',
 
-  mixins: [ DarkMixin ],
+  mixins: [ DarkMixin, ListenersMixin ],
 
   props: {
     value: {
@@ -362,7 +363,7 @@ export default Vue.extend({
       staticClass: 'q-pagination row no-wrap items-center',
       class: { disabled: this.disable },
       attrs: this.attrs,
-      on: this.$listeners
+      on: this.qListeners
     }, [
       contentStart,
 

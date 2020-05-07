@@ -190,6 +190,8 @@ In the example below, we let QTable deal with displaying the grid mode (not usin
 
 <doc-example title="Colored grid style" file="QTable/GridStyleColored" />
 
+<doc-example title="Masonry like grid" file="QTable/GridMasonry" />
+
 However, if you want to fully customize the content, check the example below, where:
   * We are using a Vue scoped slot called `item` to define how each record (the equivalent of a row in non-grid mode) should look. This allows you total freedom.
   * We are using multiple selection.
@@ -315,6 +317,12 @@ In the example below, steps have been taken to emulate an ajax call to a server.
 Below is an example of a naive csv encoding and then exporting table data by using the [exportFile](/quasar-utils/other-utils#Export-file) Quasar util. The browser should trigger a file download. For a more professional approach in regards to encoding we do recommend using [csv-parse](https://csv.js.org/parse/) and [csv-stringify](https://csv.js.org/stringify/) packages.
 
 <doc-example title="Export to csv" file="QTable/ExportCsv" no-edit />
+
+### Keyboard navigation
+
+Below is an example of keyboard navigation in the table using selected row. Use `ArrowUp`, `ArrowDown`, `PageUp`, `PageDown`, `Home` and `End` keys to navigate.
+
+<doc-example title="Keyboard navigation" file="QTable/KeyboardNavigation" />
 
 ## QTable API
 <doc-api file="QTable" />

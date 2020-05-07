@@ -3,15 +3,16 @@ import Vue from 'vue'
 import WBtn from '../btn/QBtn.js'
 import WBtnGroup from '../btn-group/QBtnGroup.js'
 
-import { slot } from '../../utils/slot.js'
-
+import ListenersMixin from '../../mixins/listeners.js'
 import FormMixin from '../../mixins/form.js'
 import RippleMixin from '../../mixins/ripple.js'
+
+import { slot } from '../../utils/slot.js'
 
 export default Vue.extend({
   name: 'WBtnToggle',
 
-  mixins: [ RippleMixin, FormMixin ],
+  mixins: [ ListenersMixin, RippleMixin, FormMixin ],
 
   props: {
     value: {
@@ -138,7 +139,7 @@ export default Vue.extend({
         glossy: this.glossy,
         spread: this.spread
       },
-      on: this.$listeners
+      on: this.qListeners
     }, child)
   }
 })
