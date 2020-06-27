@@ -34,6 +34,8 @@ export default Vue.extend({
       validator: v => /^-?[\d]+\/[0-1]\d$/.test(v)
     },
 
+    yearsInMonthView: Boolean,
+
     events: [Array, Function],
     eventColor: [String, Function],
 
@@ -58,7 +60,7 @@ export default Vue.extend({
       view: this.defaultView,
       monthDirection: direction,
       yearDirection: direction,
-      startYear: inner.year - inner.year % yearsInterval,
+      startYear: inner.year - inner.year % yearsInterval - (inner.year < 0 ? yearsInterval : 0),
       innerModel: inner,
       extModel: external
     }
@@ -82,7 +84,7 @@ export default Vue.extend({
         }
 
         this.$nextTick(() => {
-          this.startYear = inner.year - inner.year % yearsInterval
+          this.startYear = inner.year - inner.year % yearsInterval - (inner.year < 0 ? yearsInterval : 0)
           this.innerModel = inner
         })
       }
@@ -545,17 +547,30 @@ export default Vue.extend({
           h(WBtn, {
             staticClass: currentYear === true && this.today.month === i + 1 ? 'q-date__today' : null,
             props: {
-              flat: !active,
+              flat: active !== true,
               label: month,
               unelevated: active,
-              color: active ? this.computedColor : null,
-              textColor: active ? this.computedTextColor : null,
+              color: active === true ? this.computedColor : null,
+              textColor: active === true ? this.computedTextColor : null,
               tabindex: this.computedTabindex
             },
             on: cache(this, 'month#' + i, { click: () => { this.__setMonth(i + 1) } })
           })
         ])
       })
+
+      this.yearsInMonthView === true && content.unshift(
+        h('div', { staticClass: 'row no-wrap full-width' }, [
+          this.__getNavigation(h, {
+            label: this.innerModel.year,
+            view: 'Years',
+            key: this.innerModel.year,
+            dir: this.yearDirection,
+            goTo: this.__goToYear,
+            cls: ' col'
+          })
+        ])
+      )
 
       return h('div', {
         key: 'months-view',
@@ -734,7 +749,7 @@ export default Vue.extend({
           }
 
           this.$nextTick(() => {
-            this.startYear = date.year - date.year % yearsInterval
+            this.startYear = date.year - date.year % yearsInterval - (date.year < 0 ? yearsInterval : 0)
             Object.assign(this.innerModel, {
               year: date.year,
               month: date.month,
@@ -772,7 +787,7 @@ export default Vue.extend({
     return h('div', {
       class: this.classes,
       attrs: this.attrs,
-      on: this.qListeners
+      on: { ...this.qListeners }
     }, [
       this.__getHeader(h),
 

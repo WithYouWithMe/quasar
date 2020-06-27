@@ -146,83 +146,82 @@ const cli = [
     path: 'installation'
   },
   {
+    name: 'Upgrade guide (v2)',
+    badge: 'new',
+    path: 'app-upgrade-guide'
+  },
+  {
     name: 'quasar.conf.js',
     path: 'quasar-conf-js'
   },
   {
-    name: 'Testing & Auditing',
-    path: 'testing-and-auditing'
+    name: 'Browser Compatibility',
+    badge: 'new',
+    path: 'browser-compatibility'
   },
   {
-    name: 'CLI Documentation',
-    path: 'cli-documentation',
-    children: [
-      {
-        name: 'Supporting IE',
-        path: 'supporting-ie'
-      },
-      {
-        name: 'Supporting TypeScript',
-        badge: 'new',
-        path: 'supporting-ts'
-      },
-      {
-        name: 'Directory Structure',
-        path: 'directory-structure'
-      },
-      {
-        name: 'Build Commands',
-        path: 'build-commands'
-      },
-      {
-        name: 'Commands List',
-        path: 'commands-list'
-      },
-      {
-        name: 'CSS Preprocessors',
-        path: 'css-preprocessors'
-      },
-      {
-        name: 'Routing',
-        path: 'routing'
-      },
-      {
-        name: 'Lazy Loading - Code Splitting',
-        path: 'lazy-loading'
-      },
-      {
-        name: 'Handling Assets',
-        path: 'handling-assets'
-      },
-      {
-        name: 'Boot Files',
-        path: 'boot-files'
-      },
-      {
-        name: 'Prefetch Feature',
-        path: 'prefetch-feature'
-      },
-      {
-        name: 'API Proxying',
-        path: 'api-proxying'
-      },
-      {
-        name: 'Handling Webpack',
-        path: 'handling-webpack'
-      },
-      {
-        name: 'Handling process.env',
-        path: 'handling-process-env'
-      },
-      {
-        name: 'Vuex Store',
-        path: 'vuex-store'
-      },
-      {
-        name: 'Linter',
-        path: 'linter'
-      }
-    ]
+    name: 'Supporting TypeScript',
+    path: 'supporting-ts'
+  },
+  {
+    name: 'Directory Structure',
+    path: 'directory-structure'
+  },
+  {
+    name: 'Build Commands',
+    path: 'build-commands'
+  },
+  {
+    name: 'Commands List',
+    path: 'commands-list'
+  },
+  {
+    name: 'CSS Preprocessors',
+    path: 'css-preprocessors'
+  },
+  {
+    name: 'Routing',
+    path: 'routing'
+  },
+  {
+    name: 'Lazy Loading - Code Splitting',
+    path: 'lazy-loading'
+  },
+  {
+    name: 'Handling Assets',
+    path: 'handling-assets'
+  },
+  {
+    name: 'Boot Files',
+    path: 'boot-files'
+  },
+  {
+    name: 'Prefetch Feature',
+    path: 'prefetch-feature'
+  },
+  {
+    name: 'API Proxying',
+    path: 'api-proxying'
+  },
+  {
+    name: 'Handling Webpack',
+    path: 'handling-webpack'
+  },
+  {
+    name: 'Handling process.env',
+    path: 'handling-process-env'
+  },
+  {
+    name: 'Vuex Store',
+    path: 'vuex-store'
+  },
+  {
+    name: 'Linter',
+    path: 'linter'
+  },
+  {
+    name: 'Testing & Auditing',
+    path: 'testing-and-auditing'
   },
   {
     name: 'Developing SPA',
@@ -638,7 +637,6 @@ const layout = [
       },
       {
         name: 'Flexbox patterns',
-        badge: 'new',
         path: 'flexbox-patterns'
       },
       {
@@ -760,7 +758,6 @@ const plugins = [
   },
   {
     name: 'Dialog',
-    badge: 'update',
     path: 'dialog'
   },
   {
@@ -781,7 +778,6 @@ const plugins = [
   },
   {
     name: 'Notify',
-    badge: 'update',
     path: 'notify'
   }
 ]
@@ -867,7 +863,6 @@ const components = [
   },
   {
     name: 'Floating Action Button',
-    badge: 'update',
     path: 'floating-action-button'
   },
   {
@@ -885,7 +880,6 @@ const components = [
       },
       {
         name: 'File picker',
-        badge: 'new',
         path: 'file-picker'
       },
       {
@@ -1022,7 +1016,6 @@ const components = [
   },
   {
     name: 'Scroll Area',
-    badge: 'update',
     path: 'scroll-area'
   },
   {
@@ -1059,6 +1052,7 @@ const components = [
   },
   {
     name: 'Table',
+    badge: 'update',
     path: 'table'
   },
   {

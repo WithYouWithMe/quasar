@@ -78,7 +78,7 @@ export default Vue.extend({
   },
 
   methods: {
-    __set (value, opt) {
+    __set (value, opt, e) {
       if (this.readonly !== true) {
         if (this.value === value) {
           if (this.clearable === true) {
@@ -89,6 +89,8 @@ export default Vue.extend({
         else {
           this.$emit('input', value, opt)
         }
+
+        this.$emit('click', e)
       }
     }
   },
@@ -97,7 +99,10 @@ export default Vue.extend({
     const child = this.options.map((opt, i) => {
       return h(WBtn, {
         key: i,
-        on: { click: () => this.__set(opt.value, opt) },
+        on: {
+          ...this.qListeners,
+          click: e => this.__set(opt.value, opt, e)
+        },
         props: {
           disable: this.disable || opt.disable,
           label: opt.label,
@@ -138,8 +143,7 @@ export default Vue.extend({
         unelevated: this.unelevated,
         glossy: this.glossy,
         spread: this.spread
-      },
-      on: this.qListeners
+      }
     }, child)
   }
 })

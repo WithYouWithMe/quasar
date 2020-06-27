@@ -15,29 +15,35 @@ function resolve (_path) {
   return path.resolve(__dirname, '..', _path)
 }
 
-const bubleConfig = {
-  objectAssign: 'Object.assign'
-}
-
-const rollupPlugins = [
+const rollupPluginsModern = [
   nodeResolve(),
-  json(),
-  buble(bubleConfig)
+  json()
+]
+
+const rollupPluginsLegacy = [
+  ...rollupPluginsModern,
+  buble({
+    objectAssign: 'Object.assign'
+  })
 ]
 
 const builds = [
-  // {
-  //   rollup: {
-  //     input: {
-  //       input: resolve(`src/index.esm.js`)
-  //     },
-  //     output: {
-  //       file: resolve(`dist/quasar.esm.js`),
-  //       format: 'es'
-  //     }
-  //   },
-  //   build: { minified: true, minExt: false }
-  // },
+  {
+    rollup: {
+      input: {
+        input: resolve(`src/index.esm.js`)
+      },
+      output: {
+        file: resolve(`dist/quasar.esm.js`),
+        format: 'es'
+      }
+    },
+    build: {
+      minified: true,
+      minExt: false,
+      modern: true
+    }
+  },
   {
     rollup: {
       input: {
@@ -46,6 +52,22 @@ const builds = [
       output: {
         file: resolve(`dist/quasar.common.js`),
         format: 'cjs'
+      }
+    },
+    build: {
+      minified: true,
+      minExt: false,
+      modern: true
+    }
+  },
+  {
+    rollup: {
+      input: {
+        input: resolve('src/ie-compat/ie.js')
+      },
+      output: {
+        file: resolve('dist/quasar.ie.polyfills.js'),
+        format: 'es'
       }
     },
     build: {
@@ -59,40 +81,45 @@ const builds = [
         input: resolve('src/ie-compat/ie.js')
       },
       output: {
-        file: resolve('dist/quasar.ie.polyfills.js'),
-        format: 'es'
+        file: resolve('dist/quasar.ie.polyfills.umd.js'),
+        format: 'umd'
       }
     },
-    build: { minified: true, minExt: false }
+    build: {
+      minified: true
+    }
+  },
+  {
+    rollup: {
+      input: {
+        input: resolve(`src/index.umd.js`)
+      },
+      output: {
+        file: resolve(`dist/quasar.umd.js`),
+        format: 'umd'
+      }
+    },
+    build: {
+      unminified: true,
+      minified: true
+    }
+  },
+  {
+    rollup: {
+      input: {
+        input: resolve(`src/index.umd.js`)
+      },
+      output: {
+        file: resolve(`dist/quasar.umd.modern.js`),
+        format: 'umd'
+      }
+    },
+    build: {
+      unminified: true,
+      minified: true,
+      modern: true
+    }
   }
-  // {
-  //   rollup: {
-  //     input: {
-  //       input: resolve('src/ie-compat/ie.js')
-  //     },
-  //     output: {
-  //       file: resolve('dist/quasar.ie.polyfills.umd.js'),
-  //       format: 'umd'
-  //     }
-  //   },
-  //   build: { minified: true }
-  // },
-  // {
-  //   rollup: {
-  //     input: {
-  //       input: resolve(`src/index.umd.js`)
-  //     },
-  //     output: {
-  //       file: resolve(`dist/quasar.umd.js`),
-  //       format: 'umd'
-  //     }
-  //   },
-  //   build: {
-  //     requireVue: true,
-  //     unminified: true,
-  //     minified: true
-  //   }
-  // }
 ]
 
 function addAssets (builds, type, injectName) {
@@ -127,7 +154,9 @@ function build (builds) {
 }
 
 function genConfig (opts) {
-  opts.rollup.input.plugins = rollupPlugins
+  opts.rollup.input.plugins = opts.build.modern === true
+    ? rollupPluginsModern
+    : rollupPluginsLegacy
 
   opts.rollup.input.external = opts.rollup.input.external || []
   opts.rollup.input.external.push('vue')
@@ -184,7 +213,7 @@ function buildEntry (config) {
 
       const minified = uglify.minify(code, {
         compress: {
-          pure_funcs: ['makeMap']
+          ecma: config.build.modern ? 6 : 5
         }
       })
 

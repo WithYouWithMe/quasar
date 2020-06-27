@@ -488,19 +488,18 @@ export default Vue.extend({
     },
 
     __clearValue (e) {
-      this.focused = false
-
       // prevent activating the field but keep focus on desktop
       stopAndPrevent(e)
-      this.$el.focus()
+      const el = this.$refs.target || this.$el
+      el.focus()
 
       if (this.type === 'file') {
         // do not let focus be triggered
         // as it will make the native file dialog
         // appear for another selection
-        prevent(e)
         this.$refs.input.value = null
       }
+
       this.$emit('input', null)
       this.$emit('clear', this.value)
     },
@@ -515,7 +514,7 @@ export default Vue.extend({
     this.__onPostRender !== void 0 && this.$nextTick(this.__onPostRender)
 
     return h('label', {
-      staticClass: 'q-field row no-wrap items-start',
+      staticClass: 'q-field q-validation-component row no-wrap items-start',
       class: this.classes,
       attrs: this.attrs
     }, [

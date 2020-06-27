@@ -1,6 +1,6 @@
 import { client } from '../plugins/Platform.js'
-import { getModifierDirections, updateModifiers, addEvt, cleanEvt, getTouchTarget, shouldStart } from '../utils/touch.js'
-import { position, leftClick, prevent, stop, stopAndPrevent, preventDraggable, noop } from '../utils/event.js'
+import { getModifierDirections, updateModifiers, getTouchTarget, shouldStart } from '../utils/touch.js'
+import { addEvt, cleanEvt, position, leftClick, prevent, stop, stopAndPrevent, preventDraggable, noop } from '../utils/event.js'
 import { clearSelection } from '../utils/selection.js'
 
 function getChanges (evt, ctx, isFinal) {
@@ -381,6 +381,11 @@ export default {
     const ctx = el.__qtouchpan_old || el.__qtouchpan
 
     if (ctx !== void 0) {
+      // emit the end event when the directive is destroyed while active
+      // this is only needed in TouchPan because the rest of the touch directives do not emit an end event
+      // the condition is also checked in the start of function but we avoid the call
+      ctx.event !== void 0 && ctx.end()
+
       cleanEvt(ctx, 'main')
       cleanEvt(ctx, 'temp')
 

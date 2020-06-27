@@ -84,7 +84,7 @@ export default Vue.extend({
 
       return h('div', {
         staticClass: 'q-timeline__heading',
-        on: this.qListeners
+        on: { ...this.qListeners }
       }, this.reverse === true ? content.reverse() : content)
     }
 
@@ -125,7 +125,7 @@ export default Vue.extend({
     return h('li', {
       staticClass: 'q-timeline__entry',
       class: this.classes,
-      on: this.qListeners
+      on: { ...this.qListeners }
     }, this.reverse === true ? content.reverse() : content)
   }
 })

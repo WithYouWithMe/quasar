@@ -9,6 +9,7 @@ import { isKeyCode } from '../../utils/key-composition.js'
 import WCard from '../card/QCard.js'
 import WCardSection from '../card/QCardSection.js'
 import WCardActions from '../card/QCardActions.js'
+import WSeparator from '../separator/QSeparator.js'
 
 import WInput from '../input/QInput.js'
 import WOptionGroup from '../option-group/QOptionGroup.js'
@@ -92,30 +93,22 @@ export default Vue.extend({
     },
 
     okProps () {
-      return Object.assign(
-        {
-          color: this.vmColor,
-          label: this.okLabel,
-          ripple: false
-        },
-        Object(this.ok) === this.ok
-          ? this.ok
-          : { flat: true },
-        { disable: this.okDisabled }
-      )
+      return {
+        color: this.vmColor,
+        label: this.okLabel,
+        ripple: false,
+        ...(Object(this.ok) === this.ok ? this.ok : { flat: true }),
+        disable: this.okDisabled
+      }
     },
 
     cancelProps () {
-      return Object.assign(
-        {
-          color: this.vmColor,
-          label: this.cancelLabel,
-          ripple: false
-        },
-        Object(this.cancel) === this.cancel
-          ? this.cancel
-          : { flat: true }
-      )
+      return {
+        color: this.vmColor,
+        label: this.cancelLabel,
+        ripple: false,
+        ...(Object(this.cancel) === this.cancel ? this.cancel : { flat: true })
+      }
     }
   },
 
@@ -134,11 +127,21 @@ export default Vue.extend({
           props: {
             value: this.prompt.model,
             type: this.prompt.type,
+
             label: this.prompt.label,
             stackLabel: this.prompt.stackLabel,
+
             outlined: this.prompt.outlined,
             filled: this.prompt.filled,
             standout: this.prompt.standout,
+            rounded: this.prompt.rounded,
+            square: this.prompt.square,
+
+            counter: this.prompt.counter,
+            maxlength: this.prompt.maxlength,
+            prefix: this.prompt.prefix,
+            suffix: this.prompt.suffix,
+
             color: this.vmColor,
             dense: true,
             autofocus: true,
@@ -239,18 +242,29 @@ export default Vue.extend({
     )
 
     this.message && child.push(
-      this.getSection(h, 'q-dialog__message scroll', this.message)
+      this.getSection(h, 'q-dialog__message', this.message)
     )
 
-    this.hasForm === true && child.push(
-      h(
-        WCardSection,
-        { staticClass: 'scroll' },
-        this.prompt !== void 0
-          ? this.getPrompt(h)
-          : this.getOptions(h)
+    if (this.prompt !== void 0) {
+      child.push(
+        h(
+          WCardSection,
+          { staticClass: 'scroll q-dialog-plugin__form' },
+          this.getPrompt(h)
+        )
       )
-    )
+    }
+    else if (this.options !== void 0) {
+      child.push(
+        h(WSeparator, { props: { dark: this.isDark } }),
+        h(
+          WCardSection,
+          { staticClass: 'scroll q-dialog-plugin__form' },
+          this.getOptions(h)
+        ),
+        h(WSeparator, { props: { dark: this.isDark } })
+      )
+    }
 
     if (this.ok || this.cancel) {
       child.push(this.getButtons(h))

@@ -31,6 +31,13 @@ q-layout.doc-layout(view="lHh LpR lff", @scroll="onScroll")
     content-class="doc-left-drawer"
   )
     q-scroll-area(style="height: calc(100% - 50px); margin-top: 50px")
+      conf-countdown.layout-countdown(
+        color="primary"
+        align-class="justify-start"
+        padding-class="q-py-md"
+      )
+      q-separator.q-mb-lg
+
       .row.justify-center.q-my-lg
         q-btn(
           type="a"
@@ -112,12 +119,13 @@ q-layout.doc-layout(view="lHh LpR lff", @scroll="onScroll")
 import { scroll } from 'quasar'
 import {
   mdiMenu, mdiClipboardText, mdiHeartOutline, mdiMagnify, mdiChevronUp
-} from '@quasar/extras/mdi-v4'
+} from '@quasar/extras/mdi-v5'
 
 import AppMenu from 'components/AppMenu'
 import HeaderMenu from 'components/HeaderMenu'
+import ConfCountdown from 'components/ConfCountdown'
 
-const { getScrollTarget, setScrollPosition } = scroll
+const { setScrollPosition, getScrollPosition } = scroll
 
 export default {
   name: 'Layout',
@@ -132,7 +140,8 @@ export default {
 
   components: {
     AppMenu,
-    HeaderMenu
+    HeaderMenu,
+    ConfCountdown
   },
 
   data () {
@@ -176,11 +185,13 @@ export default {
   },
 
   watch: {
-    $route () {
+    $route ({ hash }) {
       this.leftDrawerState = this.$q.screen.width > 1023
-      this.$nextTick(() => {
-        this.updateActiveToc(document.documentElement.scrollTop || document.body.scrollTop)
-      })
+      if (hash === '') {
+        this.$nextTick(() => {
+          this.updateActiveToc(document.documentElement.scrollTop || document.body.scrollTop)
+        })
+      }
     },
 
     hasRightDrawer (shown) {
@@ -207,6 +218,10 @@ export default {
 
     scrollTo (id) {
       const el = document.getElementById(id)
+      if (el === null) {
+        return
+      }
+
       clearTimeout(this.scrollTimer)
 
       if (el) {
@@ -233,12 +248,11 @@ export default {
     },
 
     scrollPage (el, delay) {
-      const
-        target = getScrollTarget(el),
-        offset = el.offsetTop - el.scrollHeight
+      const { top } = el.getBoundingClientRect()
+      const offset = top + getScrollPosition(window) - el.scrollHeight - 50
 
       this.scrollingPage = true
-      setScrollPosition(target, offset, delay)
+      setScrollPosition(window, offset, delay)
 
       this.scrollTimer = setTimeout(() => {
         this.scrollingPage = false
@@ -312,7 +326,7 @@ export default {
 
       if (hash.length > 0) {
         const el = document.getElementById(hash.substring(1))
-        this.scrollPage(el, 0)
+        el !== null && this.scrollPage(el, 0)
       }
     },
 
@@ -445,4 +459,15 @@ export default {
 
 .q-page-container :target
   scroll-margin-top: ($toolbar-min-height + 16px)
+
+.doc-layout
+  .countdown
+    .heading
+      font-size: 18px
+    .time
+      font-size: 38px
+
+.layout-countdown
+  background: linear-gradient(45deg, #e6f1fc 25%, #c3e0ff 25%, #c3e0ff 50%, #e6f1fc 50%, #e6f1fc 75%, #c3e0ff 75%, #c3e0ff)
+  background-size: 40px 40px
 </style>

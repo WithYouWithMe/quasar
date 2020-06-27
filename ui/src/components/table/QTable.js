@@ -61,10 +61,14 @@ export default Vue.extend({
     loading: Boolean,
     binaryStateSort: Boolean,
 
+    iconFirstPage: String,
+    iconPrevPage: String,
+    iconNextPage: String,
+    iconLastPage: String,
+
     title: String,
 
     hideHeader: Boolean,
-    hideBottom: Boolean,
 
     grid: Boolean,
     gridHeader: Boolean,
@@ -107,12 +111,14 @@ export default Vue.extend({
 
   data () {
     return {
-      innerPagination: {
+      innerPagination: Object.assign({
         sortBy: null,
         descending: false,
         page: 1,
-        rowsPerPage: 5
-      }
+        rowsPerPage: this.rowsPerPageOptions.length > 0
+          ? this.rowsPerPageOptions[0]
+          : 5
+      }, this.pagination)
     }
   },
 
@@ -138,24 +144,14 @@ export default Vue.extend({
         .map(p => this[p]).join(';')
     },
 
-    computedData () {
+    filteredSortedRows () {
       let rows = this.data
 
-      if (rows.length === 0) {
-        return {
-          rowsNumber: 0,
-          rows
-        }
+      if (this.isServerSide === true || rows.length === 0) {
+        return rows
       }
 
-      if (this.isServerSide === true) {
-        return {
-          rowsNumber: rows.length,
-          rows
-        }
-      }
-
-      const { sortBy, descending, rowsPerPage } = this.computedPagination
+      const { sortBy, descending } = this.computedPagination
 
       if (this.filter) {
         rows = this.filterMethod(rows, this.filter, this.computedCols, this.getCellValue)
@@ -169,7 +165,21 @@ export default Vue.extend({
         )
       }
 
-      const rowsNumber = rows.length
+      return rows
+    },
+
+    filteredSortedRowsNumber () {
+      return this.filteredSortedRows.length
+    },
+
+    computedRows () {
+      let rows = this.filteredSortedRows
+
+      if (this.isServerSide === true) {
+        return rows
+      }
+
+      const { rowsPerPage } = this.computedPagination
 
       if (rowsPerPage !== 0) {
         if (this.firstRowIndex === 0 && this.data !== rows) {
@@ -182,17 +192,13 @@ export default Vue.extend({
         }
       }
 
-      return { rowsNumber, rows }
-    },
-
-    computedRows () {
-      return this.computedData.rows
+      return rows
     },
 
     computedRowsNumber () {
       return this.isServerSide === true
         ? this.computedPagination.rowsNumber || 0
-        : this.computedData.rowsNumber
+        : this.filteredSortedRowsNumber
     },
 
     nothingToDisplay () {

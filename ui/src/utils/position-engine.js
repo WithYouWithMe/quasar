@@ -137,19 +137,19 @@ export function setPosition (cfg) {
   applyBoundaries(props, anchorProps, targetProps, cfg.anchorOrigin, cfg.selfOrigin)
 
   elStyle = {
-    top: Math.floor(props.top) + 'px',
-    left: Math.floor(props.left) + 'px'
+    top: props.top + 'px',
+    left: props.left + 'px'
   }
 
   if (props.maxHeight !== void 0) {
-    elStyle.maxHeight = Math.floor(props.maxHeight) + 'px'
+    elStyle.maxHeight = props.maxHeight + 'px'
 
     if (anchorProps.height > props.maxHeight) {
       elStyle.minHeight = elStyle.maxHeight
     }
   }
   if (props.maxWidth !== void 0) {
-    elStyle.maxWidth = Math.floor(props.maxWidth) + 'px'
+    elStyle.maxWidth = props.maxWidth + 'px'
 
     if (anchorProps.width > props.maxWidth) {
       elStyle.minWidth = elStyle.maxWidth
