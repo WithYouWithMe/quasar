@@ -22,7 +22,7 @@ We will be discussing each in the next sections.
 
 ### Params
 
-The `params` object from a JSON profile file takes the same prop names as the [generate](/icongenie/command-list#Generate) command parameters (but camelCased instead of the CLI's kebab-case). There is one key difference: instead of using `mode` (examples: "spa,pwa", "all") you will be writing `include` (examples: [ "spa", "pwa" ], [ "all" ]).
+The `params` object from a JSON profile file takes the same prop names as the [generate](/icongenie/command-list#generate) command parameters (but camelCased instead of the CLI's kebab-case). There is one key difference: instead of using `mode` (examples: "spa,pwa", "all") you will be writing `include` (examples: [ "spa", "pwa" ], [ "all" ]).
 
 Full list of props that you can write for the `params` object:
 
@@ -35,8 +35,7 @@ Full list of props that you can write for the `params` object:
 | quality | Number [1-12] | Quality of the generated files; higher quality means bigger filesize, slower; lower quality means smaller filesize, faster | `12` |
 | padding | Array [Number] | (v2.1+) Apply fixed padding to the icon image after trimming it; Syntax: [ <horiz_px>, <vert_px> ]; Default is: [0, 0] | `[10, 0]` / `[5,5]` |
 | skipTrim | Boolean | (v2.2+) Do not trim the icon source file | |
-| themeColor | String [hex] | Rather than using the other color related props, you can use this one; it will be used by each generator (that uses a color) | `ccc` / `e2b399` |
-| themeColor | String [hex] | Theme color to use for all generators requiring a color; it gets overriden if any generator color is also specified | `ccc` / `e2b399` |
+| themeColor | String [hex] | Theme color to use for all generators requiring a color; it gets overridden if any generator color is also specified | `ccc` / `e2b399` |
 | pngColor | String [hex] | Background color to use for the png generator, when "background: true" in the asset definition (like for the cordova/capacitor iOS icons) | `ccc` / `e2b399` |
 | splashscreenColor | String [hex] | Background color to use for the splashscreen generator | `ccc` / `e2b399` |
 | svgColor | String [hex] | Color to use for the generated monochrome SVGs | `ccc` / `e2b399` |
@@ -148,6 +147,6 @@ Some examples for `assets` from which you can extract the syntax for every type 
 
 ## Bootstrap profiles
 
-Icon Genie also offers the [profile command](/icongenie/command-list#Profile) which can bootstrap JSON profile files for you. It can help you create one or more such files that you can then run in batch through the [generate command](/icongenie/command-list#Generate) with `--profile` param (or short `-p`).
+Icon Genie also offers the [profile command](/icongenie/command-list#profile) which can bootstrap JSON profile files for you. It can help you create one or more such files that you can then run in batch through the [generate command](/icongenie/command-list#generate) with `--profile` param (or short `-p`).
 
 The most handy use case is to generate multiple profile files into one specific folder, each with their own parameters, and then run all of them through `$ icongenie generate -p /path/to/folder`.

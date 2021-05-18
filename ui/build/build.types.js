@@ -232,12 +232,11 @@ function writeQuasarPluginProps (contents, nameName, props, isLast) {
 }
 
 function addQuasarPluginOptions (contents, components, directives, plugins) {
-  writeLine(contents, `import { QuasarIconSet } from './extras'`)
-  writeLine(contents, `import { QuasarLanguage } from './lang'`)
+  writeLine(contents, `import { GlobalQuasarLanguage, GlobalQuasarIconSet } from './globals'`)
   writeLine(contents, `export interface QuasarPluginOptions {`)
-  writeLine(contents, `lang: QuasarLanguage,`, 1)
+  writeLine(contents, `lang: GlobalQuasarLanguage,`, 1)
   writeLine(contents, `config: any,`, 1)
-  writeLine(contents, `iconSet: QuasarIconSet,`, 1)
+  writeLine(contents, `iconSet: GlobalQuasarIconSet,`, 1)
   writeQuasarPluginProps(contents, 'components', components)
   writeQuasarPluginProps(contents, 'directives', directives)
   writeQuasarPluginProps(contents, 'plugins', plugins, true)
@@ -272,7 +271,7 @@ function writeIndexDTS (apis) {
   //  or it won't be interpreted as a TS compiler directive
   //  but as a normal comment
   // On Vue CLI projects `@quasar/app` isn't available,
-  //  we ignore the "missing package" error because it's the intended behaviour 
+  //  we ignore the "missing package" error because it's the intended behaviour
   writeLine(contents, `// @ts-ignore`)
   writeLine(contents, `/// <reference types="@quasar/app" />`)
   writeLine(contents, `import Vue, { VueConstructor, PluginObject } from 'vue'`)
@@ -366,10 +365,10 @@ function writeIndexDTS (apis) {
   for (const key in injections) {
     const injectionDefs = injections[key]
     if (injectionDefs) {
-      const injectionName = `${key.toUpperCase().replace('$', '')}VueGlobals`
-      writeLine(contents, `import { ${injectionName} } from "./globals";`)
+      const injectionName = `${ key.toUpperCase().replace('$', '') }VueGlobals`
+      writeLine(contents, `import { ${ injectionName }, QSingletonGlobals } from "./globals";`)
       writeLine(contents, `declare module "./globals" {`)
-      writeLine(contents, `export interface ${injectionName} {`)
+      writeLine(contents, `export interface ${ injectionName } {`)
       for (const defKey in injectionDefs) {
         writeLines(contents, injectionDefs[defKey], 1)
       }
@@ -396,7 +395,8 @@ function writeIndexDTS (apis) {
 
   quasarTypeContents.forEach(line => write(contents, line))
 
-  writeLine(contents, `export const Quasar: PluginObject<Partial<QuasarPluginOptions>>`)
+  writeLine(contents, `export const Quasar: PluginObject<Partial<QuasarPluginOptions>> & QSingletonGlobals`)
+  writeLine(contents, `export default Quasar`)
   writeLine(contents)
 
   // These imports force TS compiler to evaluate contained declarations
@@ -404,6 +404,7 @@ function writeIndexDTS (apis) {
   //  and not directly referenced by any file
   writeLine(contents, `import './vue'`)
   writeLine(contents, `import './shim-icon-set'`)
+  writeLine(contents, `import './shim-lang'`)
 
   writeFile(resolvePath('index.d.ts'), contents.join(''))
 }

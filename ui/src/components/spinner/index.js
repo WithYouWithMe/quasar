@@ -3,6 +3,8 @@ import WSpinner from './QSpinner.js'
 import WSpinnerAudio from './QSpinnerAudio.js'
 import WSpinnerBall from './QSpinnerBall.js'
 import WSpinnerBars from './QSpinnerBars.js'
+import WSpinnerBox from './QSpinnerBox.js'
+import WSpinnerClock from './QSpinnerClock.js'
 import WSpinnerComment from './QSpinnerComment.js'
 import WSpinnerCube from './QSpinnerCube.js'
 import WSpinnerDots from './QSpinnerDots.js'
@@ -13,6 +15,7 @@ import WSpinnerHearts from './QSpinnerHearts.js'
 import WSpinnerHourglass from './QSpinnerHourglass.js'
 import WSpinnerInfinity from './QSpinnerInfinity.js'
 import WSpinnerIos from './QSpinnerIos.js'
+import WSpinnerOrbit from './QSpinnerOrbit.js'
 import WSpinnerOval from './QSpinnerOval.js'
 import WSpinnerPie from './QSpinnerPie.js'
 import WSpinnerPuff from './QSpinnerPuff.js'
@@ -26,6 +29,8 @@ export {
   WSpinnerAudio,
   WSpinnerBall,
   WSpinnerBars,
+  WSpinnerBox,
+  WSpinnerClock,
   WSpinnerComment,
   WSpinnerCube,
   WSpinnerDots,
@@ -36,6 +41,7 @@ export {
   WSpinnerHourglass,
   WSpinnerInfinity,
   WSpinnerIos,
+  WSpinnerOrbit,
   WSpinnerOval,
   WSpinnerPie,
   WSpinnerPuff,

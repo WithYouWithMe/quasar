@@ -31,26 +31,48 @@ q-layout.doc-layout(view="lHh LpR lff", @scroll="onScroll")
     content-class="doc-left-drawer"
   )
     q-scroll-area(style="height: calc(100% - 50px); margin-top: 50px")
-      conf-countdown.layout-countdown(
-        color="primary"
-        align-class="justify-start"
-        padding-class="q-py-md"
-      )
-      q-separator.q-mb-lg
-
-      .row.justify-center.q-my-lg
-        q-btn(
-          type="a"
-          href="https://donate.quasar.dev"
-          target="_blank"
-          rel="noopener"
-          size="13px"
-          color="primary"
-          :icon="mdiHeartOutline"
-          label="Donate to Quasar"
+      template(v-if="searchResults !== null")
+        component(
+          v-if="searchResults.masterComponent !== void 0"
+          :is="searchResults.masterComponent"
+        )
+        app-search-results(
+          v-else
+          :results="searchResults"
+          :search-has-focus="searchHasFocus"
+          :search-active-id="searchActiveId"
         )
 
-      app-menu.q-my-lg
+      template(v-else)
+        .row.justify-center.q-mt-md.q-mb-sm
+          q-btn.doc-layout__main-btn(
+            type="a"
+            href="https://donate.quasar.dev"
+            target="_blank"
+            rel="noopener"
+            color="primary"
+            unelevated
+            :icon="mdiHeart"
+            label="Donate to Quasar"
+            padding="12px lg"
+            no-wrap
+          )
+
+        .row.justify-center.q-mt-sm.q-mb-md
+          q-btn.doc-layout__main-btn(
+            type="a"
+            href="https://bit.ly/3cTLXsO"
+            target="_blank"
+            color="primary"
+            outline
+            :icon="mdiFileDocumentEditOutline"
+            label="Survey results are out!"
+            no-caps
+            padding="12px lg"
+            no-wrap
+          )
+
+        app-menu.q-mb-lg
 
     .absolute-top.bg-white.layout-drawer-toolbar
       form(
@@ -59,22 +81,25 @@ q-layout.doc-layout(view="lHh LpR lff", @scroll="onScroll")
         autocomplete="off"
         spellcheck="false"
       )
-        q-input.full-width.doc-algolia.bg-primary(
-          ref="docAlgolia"
-          v-model="search"
+        q-input.full-width.app-search-input.bg-primary(
+          ref="searchInputRef"
+          v-model="searchTerms"
           dense
           square
           dark
           borderless
-          :placeholder="searchPlaceholder"
+          debounce="300"
+          @keydown="onSearchKeydown"
           @focus="onSearchFocus"
           @blur="onSearchBlur"
+          placeholder="Search..."
         )
+          template(v-slot:prepend)
+            q-icon(name="search")
           template(v-slot:append)
-            q-icon(
-              :name="mdiMagnify"
-              @click="$refs.docAlgolia.focus()"
-            )
+            q-icon.cursor-pointer(v-if="searchTerms" name="cancel" @click="onSearchClear")
+            .row.items-center.no-wrap.no-pointer-events(v-else-if="!searchHasFocus")
+              kbd.flex.flex-center /
       .layout-drawer-toolbar__shadow.absolute-full.overflow-hidden.no-pointer-events
 
   q-drawer(
@@ -89,7 +114,7 @@ q-layout.doc-layout(view="lHh LpR lff", @scroll="onScroll")
     q-scroll-area.fit
       header-menu.q-mt-sm.text-primary.column(v-if="$q.screen.lt.sm", align="right")
 
-      q-list.doc-toc.q-my-lg.text-grey-8
+      q-list.doc-toc.q-my-sm.text-grey-8
         q-item(
           v-for="tocItem in tocList",
           :key="tocItem.id",
@@ -118,52 +143,55 @@ q-layout.doc-layout(view="lHh LpR lff", @scroll="onScroll")
 <script>
 import { scroll } from 'quasar'
 import {
-  mdiMenu, mdiClipboardText, mdiHeartOutline, mdiMagnify, mdiChevronUp
+  mdiMenu, mdiClipboardText, mdiHeart, mdiMagnify, mdiChevronUp,
+  mdiFileDocumentEditOutline
 } from '@quasar/extras/mdi-v5'
 
 import AppMenu from 'components/AppMenu'
 import HeaderMenu from 'components/HeaderMenu'
-import ConfCountdown from 'components/ConfCountdown'
+import AppSearchResults from 'components/AppSearchResults'
+
+import LayoutSearchMixin from './layout-search-mixin'
 
 const { setScrollPosition, getScrollPosition } = scroll
 
 export default {
   name: 'Layout',
 
+  mixins: [
+    LayoutSearchMixin
+  ],
+
   created () {
+    this.preventTocUpdate = this.$route.hash.length > 1
+
     this.mdiMenu = mdiMenu
     this.mdiClipboardText = mdiClipboardText
-    this.mdiHeartOutline = mdiHeartOutline
+    this.mdiHeart = mdiHeart
     this.mdiMagnify = mdiMagnify
     this.mdiChevronUp = mdiChevronUp
+    this.mdiFileDocumentEditOutline = mdiFileDocumentEditOutline
   },
 
   components: {
     AppMenu,
     HeaderMenu,
-    ConfCountdown
+    AppSearchResults
   },
 
   data () {
     return {
-      search: '',
-      searchFocused: false,
-
       leftDrawerState: false,
       rightDrawerState: false,
       rightDrawerOnLayout: false,
 
-      activeToc: void 0
+      activeToc: this.$route.hash.length > 1
+        ? this.$route.hash.substring(1)
+        : void 0
     }
   },
 
   computed: {
-    searchPlaceholder () {
-      return this.searchFocused === true
-        ? 'Type to start searching...'
-        : (this.$q.platform.is.desktop === true ? `Type ' / ' to focus here...` : 'Search...')
-    },
-
     hasRightDrawer () {
       return this.tocList.length > 0 || this.$q.screen.lt.sm
     },
@@ -177,7 +205,7 @@ export default {
       const toc = this.$root.store.toc
       return toc.length > 0
         ? [
-          { id: 'Introduction', title: 'Introduction' },
+          { id: 'introduction', title: 'Introduction' },
           ...this.$root.store.toc
         ]
         : toc
@@ -185,13 +213,11 @@ export default {
   },
 
   watch: {
-    $route ({ hash }) {
+    $route (newRoute, oldRoute) {
       this.leftDrawerState = this.$q.screen.width > 1023
-      if (hash === '') {
-        this.$nextTick(() => {
-          this.updateActiveToc(document.documentElement.scrollTop || document.body.scrollTop)
-        })
-      }
+      setTimeout(() => {
+        this.scrollToCurrentAnchor(newRoute.path !== oldRoute.path)
+      })
     },
 
     hasRightDrawer (shown) {
@@ -210,52 +236,46 @@ export default {
       this.rightDrawerState = !this.rightDrawerState
     },
 
-    resetScroll (el, done) {
+    resetScroll (_, done) {
       document.documentElement.scrollTop = 0
       document.body.scrollTop = 0
       done()
     },
 
-    scrollTo (id) {
-      const el = document.getElementById(id)
-      if (el === null) {
-        return
+    changeRouterHash (hash) {
+      if (this.$route.hash !== hash) {
+        this.$router.push({ hash }).catch(() => {})
       }
+      else {
+        this.scrollToCurrentAnchor()
+      }
+    },
 
+    scrollTo (id) {
       clearTimeout(this.scrollTimer)
 
-      if (el) {
-        if (this.rightDrawerOnLayout !== true) {
-          this.rightDrawerState = false
-          this.scrollTimer = setTimeout(() => {
-            this.scrollPage(el, 500)
-          }, 300)
-        }
-        else {
-          this.scrollPage(el, 500)
-        }
-
-        el.id = ''
-      }
-
-      window.location.hash = '#' + id
-
-      if (el) {
-        setTimeout(() => {
-          el.id = id
+      if (this.rightDrawerOnLayout !== true) {
+        this.rightDrawerState = false
+        this.scrollTimer = setTimeout(() => {
+          this.changeRouterHash('#' + id)
         }, 300)
+      }
+      else {
+        this.changeRouterHash('#' + id)
       }
     },
 
     scrollPage (el, delay) {
       const { top } = el.getBoundingClientRect()
-      const offset = top + getScrollPosition(window) - el.scrollHeight - 50
+      const offset = Math.max(0, getScrollPosition(window) + top - 66)
 
-      this.scrollingPage = true
+      clearTimeout(this.scrollTimer)
+
+      this.preventTocUpdate = true
       setScrollPosition(window, offset, delay)
 
       this.scrollTimer = setTimeout(() => {
-        this.scrollingPage = false
+        this.preventTocUpdate = false
       }, delay + 10)
     },
 
@@ -264,12 +284,19 @@ export default {
     },
 
     onScroll ({ position }) {
-      if (this.scrollingPage !== true) {
+      if (
+        this.preventTocUpdate !== true &&
+        (this.rightDrawerOnLayout === true || this.rightDrawerState !== true)
+      ) {
         this.updateActiveToc(position)
       }
     },
 
     updateActiveToc (position) {
+      if (position === void 0) {
+        position = getScrollPosition(window)
+      }
+
       const toc = this.tocList
       let last
 
@@ -297,112 +324,57 @@ export default {
       }
     },
 
-    focusOnSearch (evt) {
-      if (
-        evt.target.tagName !== 'INPUT' &&
-        String.fromCharCode(evt.keyCode) === '/'
-      ) {
-        evt.preventDefault()
-        this.search = ''
-        if (!this.leftDrawerState) {
-          this.leftDrawerState = true
-        }
-        setTimeout(() => {
-          this.$refs.docAlgolia.focus()
-        })
-      }
-    },
+    scrollToCurrentAnchor (immediate) {
+      const { hash } = this.$route
+      const el = hash.length > 1
+        ? document.getElementById(hash.substring(1))
+        : null
 
-    onSearchFocus () {
-      this.searchFocused = true
-    },
-
-    onSearchBlur () {
-      this.searchFocused = false
-    },
-
-    scrollToCurrentAnchor () {
-      const hash = window.location.hash
-
-      if (hash.length > 0) {
-        const el = document.getElementById(hash.substring(1))
-        el !== null && this.scrollPage(el, 0)
-      }
-    },
-
-    initializeAlgolia () {
-      // If we have a search string in the query (mostly from tab-to-search functionality),
-      // we need to open the drawer to fill in the search string in the input later
-      const searchQuery = this.$route.query.search
-
-      if (searchQuery) {
-        this.leftDrawerState = true
-      }
-
-      import(
-        /* webpackChunkName: "algolia" */
-        'docsearch.js'
-      ).then(docsearch => {
-        docsearch.default({
-          apiKey: '5c15f3938ef24ae49e3a0e69dc4a140f',
-          indexName: 'quasar-framework',
-          inputSelector: '.doc-algolia input',
-          algoliaOptions: {
-            hitsPerPage: 7
-          },
-          handleSelected: (a, b, suggestion, c, context) => {
-            const url = suggestion.url.replace('https://quasar.dev', '')
-
-            this.search = ''
-            this.$router.push(url)
-            this.$refs.docAlgolia.blur()
+      if (el !== null) {
+        if (immediate === true) {
+          let anchorEl = el
+          while (anchorEl.parentElement !== null && anchorEl.parentElement.classList.contains('q-page') !== true) {
+            anchorEl = anchorEl.parentElement
           }
-        })
 
-        if (this.$q.platform.is.desktop === true) {
-          window.addEventListener('keypress', this.focusOnSearch)
-        }
+          document.body.classList.add('q-scroll--lock')
+          anchorEl.classList.add('q-scroll--anchor')
 
-        if (searchQuery) {
-          // Here we put search string from query into the input and open the search popup.
-          // Unfortunately, this input is managed completely by Algolia and their code doesn't seem to
-          // have a method of opening the popup programmatically, so we need to simulate typing on that input element.
-          // We also need to dispatch the event only after the input text is populated and Vue will
-          // do that in next render, so we schedule it on the next event loop iteration with setTimeout.
-          this.search = searchQuery
-          this.$refs.docAlgolia.focus()
           setTimeout(() => {
-            this.$refs.docAlgolia.$refs.input.dispatchEvent(new Event('input', {}))
-          })
+            document.body.classList.remove('q-scroll--lock')
+            anchorEl && anchorEl.classList.remove('q-scroll--anchor')
+          }, 2000)
         }
-      })
+
+        this.scrollPage(el, immediate === true ? 0 : 500)
+      }
+      else {
+        this.preventTocUpdate = false
+        this.updateActiveToc()
+      }
     }
   },
 
   mounted () {
-    this.scrollToCurrentAnchor()
-    this.initializeAlgolia()
+    this.scrollToCurrentAnchor(true)
   },
 
   beforeDestroy () {
     clearTimeout(this.scrollTimer)
-
-    if (this.$q.platform.is.desktop === true) {
-      window.removeEventListener('keypress', this.focusOnSearch)
-    }
   }
 }
 </script>
 
 <style lang="sass">
-@import '../css/docsearch'
-
 .header
   background: linear-gradient(145deg, $primary 11%, $dark-primary 75%)
 
 .header-logo
   width: 25px
   height: 25px
+
+.doc-layout__main-btn
+  width: 248px
 
 .doc-layout-avatar > div
   border-radius: 0
@@ -421,9 +393,24 @@ export default {
       left: 0
       box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.2), 0 0px 10px rgba(0, 0, 0, 0.24)
 
-.doc-algolia
+.app-search-input,
+.app-search-input .q-field__control
+  height: 50px
+
+.app-search-input
   .q-field__control
     padding: 0 18px 0 16px !important
+  input
+    line-height: 38px
+  .q-field__prepend,
+  .q-field__append
+    height: 100%
+    cursor: text !important
+  kbd
+    font-size: .6em !important
+    min-width: 1.6em
+    min-height: 1.5em
+    font-weight: bold
   &.q-field--focused
     .q-icon
       color: #fff
@@ -431,7 +418,7 @@ export default {
 .q-drawer--mobile
   .layout-drawer-toolbar form
     margin-right: -1px
-  .doc-algolia .q-field__control
+  .app-search-input .q-field__control
     padding-right: 17px !important
   .doc-toc
     .q-item
@@ -443,6 +430,7 @@ export default {
   border-radius: 10px 0 0 10px
   margin-top: 1px
   margin-bottom: 1px
+  font-size: 12px
 
   &.q-item--active
     background: scale-color($primary, $lightness: 90%)
@@ -460,6 +448,10 @@ export default {
 .q-page-container :target
   scroll-margin-top: ($toolbar-min-height + 16px)
 
+// keep the button on top of sticky in examples
+.q-page-scroller > .q-page-sticky
+  z-index: 1
+
 .doc-layout
   .countdown
     .heading
@@ -467,7 +459,8 @@ export default {
     .time
       font-size: 38px
 
-.layout-countdown
+.layout-link
   background: linear-gradient(45deg, #e6f1fc 25%, #c3e0ff 25%, #c3e0ff 50%, #e6f1fc 50%, #e6f1fc 75%, #c3e0ff 75%, #c3e0ff)
   background-size: 40px 40px
+  text-align: center
 </style>

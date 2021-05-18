@@ -59,7 +59,7 @@ export default Vue.extend({
     },
 
     __updatePos () {
-      let containerTop, containerHeight, containerBottom, top, bottom
+      let containerTop, containerHeight, containerBottom
 
       if (this.__scrollTarget === window) {
         containerTop = 0
@@ -72,8 +72,8 @@ export default Vue.extend({
         containerBottom = containerTop + containerHeight
       }
 
-      top = offset(this.$el).top
-      bottom = top + this.height
+      const top = offset(this.$el).top
+      const bottom = top + this.height
 
       if (this.observer !== void 0 || (bottom > containerTop && top < containerBottom)) {
         const percent = (containerBottom - top) / (this.height + containerHeight)
@@ -84,7 +84,7 @@ export default Vue.extend({
 
     __setPos (offset) {
       // apply it immediately without any delay
-      this.media.style.transform = `translate3D(-50%,${Math.round(offset)}px, 0)`
+      this.media.style.transform = `translate3d(-50%,${Math.round(offset)}px,0)`
     },
 
     __onResize () {

@@ -6,8 +6,12 @@ import ListenersMixin from '../../mixins/listeners.js'
 
 import { mergeSlot } from '../../utils/slot.js'
 
-function width (val) {
-  return { transform: `scale3d(${val},1,1)` }
+function width (val, reverse, $q) {
+  return {
+    transform: reverse === true
+      ? `translateX(${$q.lang.rtl === true ? '-' : ''}100%) scale3d(${-val},1,1)`
+      : `scale3d(${val},1,1)`
+  }
 }
 
 export default Vue.extend({
@@ -57,7 +61,7 @@ export default Vue.extend({
     },
 
     trackStyle () {
-      return width(this.buffer !== void 0 ? this.buffer : 1)
+      return width(this.buffer !== void 0 ? this.buffer : 1, this.reverse, this.$q)
     },
 
     trackClass () {
@@ -67,7 +71,7 @@ export default Vue.extend({
     },
 
     modelStyle () {
-      return width(this.motion === true ? 1 : this.value)
+      return width(this.motion === true ? 1 : this.value, this.reverse, this.$q)
     },
 
     modelClasses () {
@@ -77,6 +81,10 @@ export default Vue.extend({
 
     stripeStyle () {
       return { width: (this.value * 100) + '%' }
+    },
+
+    stripeClass () {
+      return this.reverse === true ? 'absolute-right' : 'absolute-left'
     },
 
     attrs () {
@@ -106,8 +114,9 @@ export default Vue.extend({
 
     this.stripe === true && this.motion === false && child.push(
       h('div', {
-        staticClass: 'q-linear-progress__stripe absolute-full',
-        style: this.stripeStyle
+        staticClass: 'q-linear-progress__stripe',
+        style: this.stripeStyle,
+        class: this.stripeClass
       })
     )
 

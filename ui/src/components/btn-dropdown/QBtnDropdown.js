@@ -1,6 +1,7 @@
 import Vue from 'vue'
 
 import BtnMixin from '../../mixins/btn.js'
+import AttrsMixin from '../../mixins/attrs.js'
 
 import WIcon from '../icon/QIcon.js'
 import WBtn from '../btn/QBtn.js'
@@ -8,32 +9,36 @@ import WBtnGroup from '../btn-group/QBtnGroup.js'
 import WMenu from '../menu/QMenu.js'
 
 import { slot } from '../../utils/slot.js'
+import { stop } from '../../utils/event.js'
 import cache from '../../utils/cache.js'
 
 export default Vue.extend({
   name: 'WBtnDropdown',
 
-  mixins: [ BtnMixin ],
+  mixins: [ BtnMixin, AttrsMixin ],
+
+  inheritAttrs: false,
 
   props: {
     value: Boolean,
     split: Boolean,
     dropdownIcon: String,
 
-    contentClass: [Array, String, Object],
-    contentStyle: [Array, String, Object],
+    contentClass: [ Array, String, Object ],
+    contentStyle: [ Array, String, Object ],
 
     cover: Boolean,
     persistent: Boolean,
+    noRouteDismiss: Boolean,
     autoClose: Boolean,
 
     menuAnchor: {
       type: String,
-      default: 'bottom right'
+      default: 'bottom end'
     },
     menuSelf: {
       type: String,
-      default: 'top right'
+      default: 'top end'
     },
     menuOffset: Array,
 
@@ -52,6 +57,10 @@ export default Vue.extend({
   watch: {
     value (val) {
       this.$refs.menu !== void 0 && this.$refs.menu[val ? 'show' : 'hide']()
+    },
+
+    split () {
+      this.hide()
     }
   },
 
@@ -59,7 +68,7 @@ export default Vue.extend({
     const label = slot(this, 'label', [])
     const attrs = {
       'aria-expanded': this.showing === true ? 'true' : 'false',
-      'aria-haspopup': true
+      'aria-haspopup': 'true'
     }
 
     if (
@@ -69,7 +78,7 @@ export default Vue.extend({
         this.disableDropdown === true
       )
     ) {
-      attrs['aria-disabled'] = ''
+      attrs['aria-disabled'] = 'true'
     }
 
     const Arrow = [
@@ -88,6 +97,7 @@ export default Vue.extend({
           cover: this.cover,
           fit: true,
           persistent: this.persistent,
+          noRouteDismiss: this.noRouteDismiss,
           autoClose: this.autoClose,
           anchor: this.menuAnchor,
           self: this.menuSelf,
@@ -126,7 +136,10 @@ export default Vue.extend({
           noWrap: true,
           round: false
         },
-        attrs,
+        attrs: {
+          ...this.qAttrs,
+          ...attrs
+        },
         on: cache(this, 'nonSpl', {
           click: e => {
             this.$emit('click', e)
@@ -144,8 +157,10 @@ export default Vue.extend({
         iconRight: this.iconRight,
         round: false
       },
+      attrs: this.qAttrs,
       on: cache(this, 'spl', {
         click: e => {
+          stop(e) // prevent showing the menu on click
           this.hide()
           this.$emit('click', e)
         }
@@ -167,7 +182,7 @@ export default Vue.extend({
       Btn,
 
       h(WBtn, {
-        staticClass: 'q-btn-dropdown__arrow-container',
+        staticClass: 'q-btn-dropdown__arrow-container q-anchor--skip',
         attrs,
         props: {
           disable: this.disable === true || this.disableDropdown === true,

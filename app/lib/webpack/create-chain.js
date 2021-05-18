@@ -170,21 +170,12 @@ module.exports = function (cfg, configName) {
       .plugin('ts-checker')
       // https://github.com/TypeStrong/fork-ts-checker-webpack-plugin#options
       .use(ForkTsCheckerWebpackPlugin, [
-        // custom config is merged if present, but vue option is always enabled
-        cfg.__versioning.tsChecker === 'v5'
-          ? merge({}, cfg.supportTS.tsCheckerConfig || {}, {
-            typescript: {
-              extensions: {
-                vue: true
-              }
-            }
-          })
-          : { ...(cfg.supportTS.tsCheckerConfig || {}), vue: true }
+        { ...(cfg.supportTS.tsCheckerConfig || {}), vue: true }
       ])
   }
 
   chain.module.rule('images')
-    .test(/\.(png|jpe?g|gif|svg)(\?.*)?$/)
+    .test(/\.(png|jpe?g|gif|svg|webp|avif)(\?.*)?$/)
     .use('url-loader')
       .loader('url-loader')
       .options({
@@ -310,22 +301,33 @@ module.exports = function (cfg, configName) {
         hashDigest: 'hex'
       }])
 
-    if (configName !== 'Server') {
+    if (
+      cfg.build.ignorePublicFolder !== true &&
+      configName !== 'Server'
+    ) {
       // copy /public to dist folder
       const CopyWebpackPlugin = require('copy-webpack-plugin')
 
+      const ignore = [
+        '**/.DS_Store',
+        '**/.Thumbs.db',
+        '**/*.sublime*',
+        '**/.idea',
+        '**/.editorconfig',
+        '**/.vscode'
+      ]
+
+      // avoid useless files to be copied
+      if (['electron', 'cordova', 'capacitor'].includes(cfg.ctx.modeName)) {
+        ignore.push(
+          '**/public/icons', '**/public/favicon.ico'
+        )
+      }
+
       const patterns = [{
         from: appPaths.resolve.app('public'),
-        to: '.',
         noErrorOnMissing: true,
-        globOptions: {
-          ignore: [ appPaths.resolve.app('/**/.*') ].concat(
-            // avoid useless files to be copied
-            ['electron', 'cordova', 'capacitor'].includes(cfg.ctx.modeName)
-              ? [ appPaths.resolve.app('public/icons'), appPaths.resolve.app('public/favicon.ico') ]
-              : []
-          )
-        }
+        globOptions: { ignore }
       }]
 
       chain.plugin('copy-webpack')

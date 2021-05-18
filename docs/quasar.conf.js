@@ -108,7 +108,7 @@ module.exports = function (ctx) {
         short_name: 'Quasar Docs',
         description: 'Quasar Framework Documentation',
         display: 'standalone',
-        orientation: 'portrait',
+        orientation: 'any',
         background_color: '#ffffff',
         theme_color: '#027be3',
         icons: [
@@ -151,17 +151,7 @@ module.exports = function (ctx) {
 
     vendor: {
       remove: [
-        'quasar/dist/api',
-
-        // following are used by algolia
-        'algoliasearch',
-        'autocomplete.js',
-        'hogan.js',
-        'request',
-        'stack-utils',
-        'to-factory',
-        'zepto',
-        'es6-promise'
+        'quasar/dist/api'
       ]
     }
   }

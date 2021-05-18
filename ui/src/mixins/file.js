@@ -16,6 +16,11 @@ function filterFiles (files, rejectedFiles, failedPropValidation, filterFn) {
   return acceptedFiles
 }
 
+function stopAndPreventDrag (e) {
+  e && e.dataTransfer && (e.dataTransfer.dropEffect = 'copy')
+  stopAndPrevent(e)
+}
+
 export default {
   props: {
     multiple: Boolean,
@@ -32,8 +37,10 @@ export default {
       if (this.accept !== void 0) {
         return this.accept.split(',').map(ext => {
           ext = ext.trim()
-          // support "image/*"
-          if (ext.endsWith('/*')) {
+          if (ext === '*') { // support "*"
+            return '*/'
+          }
+          else if (ext.endsWith('/*')) { // support "image/*" or "*/*"
             ext = ext.slice(0, ext.length - 1)
           }
           return ext.toUpperCase()
@@ -75,7 +82,7 @@ export default {
       }
 
       // filter file types
-      if (this.accept !== void 0) {
+      if (this.accept !== void 0 && this.extensions.indexOf('*/') === -1) {
         files = filterFiles(files, rejectedFiles, 'accept', file => {
           return this.extensions.some(ext => (
             file.type.toUpperCase().startsWith(ext) ||
@@ -145,8 +152,8 @@ export default {
     },
 
     __onDragOver (e) {
-      stopAndPrevent(e)
-      this.dnd = true
+      stopAndPreventDrag(e)
+      this.dnd !== true && (this.dnd = true)
     },
 
     __onDragLeave (e) {
@@ -155,8 +162,8 @@ export default {
     },
 
     __onDrop (e) {
-      stopAndPrevent(e)
-      let files = e.dataTransfer.files
+      stopAndPreventDrag(e)
+      const files = e.dataTransfer.files
 
       if (files.length > 0) {
         this.__addFiles(null, files)
@@ -170,8 +177,8 @@ export default {
         return h('div', {
           staticClass: `q-${type}__dnd absolute-full`,
           on: cache(this, 'dnd', {
-            dragenter: stopAndPrevent,
-            dragover: stopAndPrevent,
+            dragenter: stopAndPreventDrag,
+            dragover: stopAndPreventDrag,
             dragleave: this.__onDragLeave,
             drop: this.__onDrop
           })

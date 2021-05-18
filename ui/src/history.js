@@ -53,6 +53,23 @@ export default {
       return
     }
 
+    const qConf = cfg[cordova === true ? 'cordova' : 'capacitor']
+
+    if (qConf !== void 0 && qConf.backButton === false) {
+      return
+    }
+
+    // if the '@capacitor/app' plugin is not installed
+    // then we got nothing to do
+    if (
+      // if we're on Capacitor mode
+      capacitor === true
+      // and it's also not in Capacitor's main instance
+      && (window.Capacitor === void 0 || window.Capacitor.Plugins.App === void 0)
+    ) {
+      return
+    }
+
     this.add = entry => {
       if (entry.condition === void 0) {
         entry.condition = getTrue
@@ -70,7 +87,7 @@ export default {
     const shouldExit = getShouldExitFn(
       Object.assign(
         { backButtonExit: true },
-        cfg[cordova === true ? 'cordova' : 'capacitor']
+        qConf
       )
     )
 

@@ -146,8 +146,7 @@ const cli = [
     path: 'installation'
   },
   {
-    name: 'Upgrade guide (v2)',
-    badge: 'new',
+    name: 'Upgrade guide',
     path: 'app-upgrade-guide'
   },
   {
@@ -156,7 +155,6 @@ const cli = [
   },
   {
     name: 'Browser Compatibility',
-    badge: 'new',
     path: 'browser-compatibility'
   },
   {
@@ -338,6 +336,53 @@ const cli = [
     path: 'developing-mobile-apps'
   },
   {
+    name: 'Developing Capacitor Apps',
+    path: 'developing-capacitor-apps',
+    children: [
+      {
+        name: 'Introduction',
+        path: 'introduction'
+      },
+      {
+        name: 'Preparation',
+        path: 'preparation'
+      },
+      {
+        name: 'Capacitor versions',
+        badge: 'new',
+        path: 'capacitor-version-support'
+      },
+      {
+        name: 'Configuring Capacitor',
+        path: 'configuring-capacitor'
+      },
+      {
+        name: 'App Icons for Capacitor',
+        path: 'app-icons-capacitor'
+      },
+      {
+        name: 'Capacitor API',
+        path: 'capacitor-api'
+      },
+      {
+        name: 'Build Commands',
+        path: 'build-commands'
+      },
+      {
+        name: 'Troubleshooting and Tips',
+        path: 'troubleshooting-and-tips'
+      },
+      {
+        name: 'Managing Google Analytics',
+        path: 'managing-google-analytics'
+      },
+      {
+        name: 'Publishing to Store',
+        path: 'publishing-to-store'
+      }
+    ]
+  },
+  {
     name: 'Developing Cordova Apps',
     path: 'developing-cordova-apps',
     children: [
@@ -360,48 +405,6 @@ const cli = [
       {
         name: 'Cordova Plugins',
         path: 'cordova-plugins'
-      },
-      {
-        name: 'Build Commands',
-        path: 'build-commands'
-      },
-      {
-        name: 'Troubleshooting and Tips',
-        path: 'troubleshooting-and-tips'
-      },
-      {
-        name: 'Managing Google Analytics',
-        path: 'managing-google-analytics'
-      },
-      {
-        name: 'Publishing to Store',
-        path: 'publishing-to-store'
-      }
-    ]
-  },
-  {
-    name: 'Developing Capacitor Apps',
-    path: 'developing-capacitor-apps',
-    children: [
-      {
-        name: 'Introduction',
-        path: 'introduction'
-      },
-      {
-        name: 'Preparation',
-        path: 'preparation'
-      },
-      {
-        name: 'Configuring Capacitor',
-        path: 'configuring-capacitor'
-      },
-      {
-        name: 'App Icons for Capacitor',
-        path: 'app-icons-capacitor'
-      },
-      {
-        name: 'Capacitor API',
-        path: 'capacitor-api'
       },
       {
         name: 'Build Commands',
@@ -704,6 +707,10 @@ const directives = [
   {
     name: 'Mutation',
     path: 'mutation'
+  },
+  {
+    name: 'Morph',
+    path: 'morph'
   },
   {
     name: 'Scroll',
@@ -1052,7 +1059,6 @@ const components = [
   },
   {
     name: 'Table',
-    badge: 'update',
     path: 'table'
   },
   {
@@ -1174,6 +1180,10 @@ const utils = [
   {
     name: 'DOM Utils',
     path: 'dom-utils'
+  },
+  {
+    name: 'Morph Utils',
+    path: 'morph-utils'
   },
   {
     name: 'Formatter Utils',

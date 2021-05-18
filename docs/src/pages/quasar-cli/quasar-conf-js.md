@@ -13,8 +13,8 @@ So what can you configure through `/quasar.conf.js`?
 * [CSS animations](/options/animations) that you wish to use
 * [Boot Files](/quasar-cli/boot-files) list (that determines order of execution too) -- which are files in `/src/boot` that tell how your app is initialized before mounting the root Vue component
 * Global CSS/Stylus/... files to be included in the bundle
-* PWA [manifest](/quasar-cli/developing-pwa/configuring-pwa#Configuring-Manifest-File) and [Workbox options](/quasar-cli/developing-pwa/configuring-pwa#Quasar.conf.js)
-* [Electron Packager](/quasar-cli/developing-electron-apps/configuring-electron#Quasar.conf.js) and/or [Electron Builder](/quasar-cli/developing-electron-apps/configuring-electron#Quasar.conf.js)
+* PWA [manifest](/quasar-cli/developing-pwa/configuring-pwa#configuring-manifest-file) and [Workbox options](/quasar-cli/developing-pwa/configuring-pwa#quasar-conf-js)
+* [Electron Packager](/quasar-cli/developing-electron-apps/configuring-electron#quasar-conf-js) and/or [Electron Builder](/quasar-cli/developing-electron-apps/configuring-electron#quasar-conf-js)
 * IE11+ support
 * Extend Webpack config
 
@@ -33,7 +33,7 @@ You'll notice that changing any of these settings does not require you to manual
 You'll notice that `/quasar.conf.js` exports a function that takes a `ctx` (context) parameter and returns an Object. This allows you to dynamically change your website/app config based on this context:
 
 ```js
-module.exports = function (ctx) {
+module.exports = function (ctx) { // can be async too (@quasar/app v2.1+)
   console.log(ctx)
 
   // Example output on console:
@@ -86,6 +86,28 @@ module.exports = function (ctx) {
       ? 8000
       : (ctx.mode.pwa ? 9000 : 9090)
   }
+}
+```
+
+Also, starting with "@quasar/app" v2.1+, you can now do async work before returning the quasar configuration:
+
+```js
+module.exports = async function (ctx) {
+  const data = await someAsyncFunction()
+  return {
+    // ... use "data"
+  }
+}
+
+// or:
+module.exports = function (ctx) {
+  return new Promise(resolve => {
+    // some async work then:
+    // resolve() with the quasar config
+    resolve({
+      //
+    })
+  })
 }
 ```
 
@@ -195,7 +217,7 @@ return {
 }
 ```
 
-More on cssAddon [here](/layout/grid/introduction-to-flexbox#Flex-Addons).
+More on cssAddon [here](/layout/grid/introduction-to-flexbox#flex-addons).
 
 ### Property: devServer
 **Webpack devServer options**. Take a look at the [full list](https://webpack.js.org/configuration/dev-server/) of options. Some are overwritten by Quasar CLI based on "quasar dev" parameters and Quasar mode in order to ensure that everything is setup correctly. Note: if you're proxying the development server (i.e. using a cloud IDE), set the `public` setting to your public application URL.
@@ -245,6 +267,16 @@ devServer: {
   vueDevtools: true
 }
 ```
+#### Docker and WSL Issues with HRM
+If you are using a Docker Container, you may find HMR stops working. HMR relies on the operating system to give notifications about changed files which may not work for your Docker Container. You can change this to polling by adding:
+
+```js
+devServer: {
+  watchOptions: {
+    poll: 1000
+  }
+}
+```
 
 ### Property: build <q-badge align="top" label="@quasar/app v2 specs" />
 | Property | Type | Description |
@@ -268,6 +300,7 @@ devServer: {
 | ssrPwaHtmlFilename | String | (**@quasar/app 1.8+**) Used for SSR+PWA mode. Default is 'offline.html'. |
 | productName | String | Default value is taken from package.json > productName field. |
 | distDir | String | Folder where Quasar CLI should generate the distributables. Relative path to project root directory. Default is 'dist/{ctx.modeName}'. Applies to all Modes except for Cordova (which is forced to `src-cordova/www`). |
+| ignorePublicFolder | Boolean | (**@quasar/app 2.0.7+**) Ignores the /public folder. If you depend on a statics folder then you will need to configure it yourself (outside of Quasar or through the extendWebpack/chainWebpack), so make sure that you know what you are doing. |
 | devtool | String | Source map [strategy](https://webpack.js.org/configuration/devtool/) to use. |
 | env | Object | Add properties to `process.env` that you can use in your website/app JS code. |
 | gzip | Boolean/Object | Gzip the distributables. Useful when the web server with which you are serving the content does not have gzip. If using as Object, it represents the compression-webpack-plugin config Object. |
@@ -329,12 +362,27 @@ sourceFiles: {
 ```
 
 ### Example setting env for dev/build <q-badge align="top" label="@quasar/app v2 specs" />
+
+There's two concepts that need to be understood here. The env variables from the terminal that are available in `/quasar.conf.js` file itself and the environment variables that you pass to your UI code.
+
 ```js
-build: {
-  env: {
-    API: ctx.dev
-      ? 'https://dev.api.com'
-      : 'https://prod.api.com'
+// quasar.conf.js
+
+// Accessing terminal variables
+console.log(process.env)
+
+module.exports = function (ctx) {
+  return {
+    // ...
+
+    build: {
+      // passing down to UI code from quasar.conf.js
+      env: {
+        API: ctx.dev
+          ? 'https://dev.api.com'
+          : 'https://prod.api.com'
+      }
+    }
   }
 }
 ```
@@ -357,11 +405,24 @@ build: {
 }
 ```
 
-> Alternatively you can use our [@quasar/dotenv](https://github.com/quasarframework/app-extension-dotenv) or [@quasar/qenv](https://github.com/quasarframework/app-extension-qenv) App Extensions.
-
 ::: tip
 Also check out [Handling process.env](/quasar-cli/handling-process-env) page.
 :::
+
+#### Using dotenv
+
+Should you wish to use `.env` file(s), you can even use [dotenv](https://www.npmjs.com/package/dotenv) package. The following is just an example that passes env variables from the terminal right down to your UI's app code:
+
+```bash
+$ yarn add --dev dotenv
+```
+
+Then in your `/quasar.conf.js`:
+```
+build: {
+  env: require('dotenv').config().parsed
+}
+```
 
 ### Handling Webpack configuration
 In depth analysis on [Handling Webpack](/quasar-cli/handling-webpack) documentation page.

@@ -11,6 +11,7 @@
     <q-toggle v-model="greedy" label="Greedy" />
     <q-toggle v-model="loading" label="Loading" />
     <q-toggle v-model="customInput" label="Custom Input" />
+    <q-toggle v-model="titleIsDisabled" label="Disable Title QSelect" />
     <q-option-group class="q-mb-lg" inline v-model="autofocusEl" dense="dense" :options="autofocusEls" />
 
     <q-form
@@ -50,9 +51,11 @@
           :dark="dark"
           :color="dark ? 'yellow' : 'primary'"
           filled
+          :disable="titleIsDisabled"
           label="Title"
           :rules="[ val => !!val ]"
           :autofocus="autofocusEl === 4"
+          clearable
         />
 
         <q-input
@@ -66,6 +69,7 @@
           lazy-rules
           :rules="[ val => val && val.length > 0 || 'Please type something']"
           :autofocus="autofocusEl === 1"
+          clearable
         />
 
         <q-input
@@ -81,6 +85,7 @@
             val => val > 0 && val < 100 || 'Please type a real age'
           ]"
           :autofocus="autofocusEl === 2"
+          clearable
         />
 
         <q-input
@@ -95,6 +100,7 @@
             val => val !== null && val !== '' || 'Please type your age',
             val => val > 0 && val < 100 || 'Please type a real age'
           ]"
+          clearable
         />
 
         <q-input
@@ -105,6 +111,7 @@
           :rules="[
             asyncRule
           ]"
+          clearable
         />
 
         <q-toggle :dark="dark" v-model="accept" label="I accept the license and terms" :autofocus="autofocusEl === 3" />
@@ -227,6 +234,8 @@ export default {
       modelAsync: null,
 
       accept: false,
+
+      titleIsDisabled: false,
 
       show: true,
       autofocus: true,

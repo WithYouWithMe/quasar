@@ -30,7 +30,6 @@ export default {
 
     label: String,
     leftLabel: Boolean,
-    fontSize: String,
 
     color: String,
     keepColor: Boolean,
@@ -69,12 +68,6 @@ export default {
 
     computedTabindex () {
       return this.disable === true ? -1 : this.tabindex || 0
-    },
-
-    labelStyle () {
-      if (this.fontSize !== void 0) {
-        return { fontSize: this.fontSize }
-      }
     },
 
     classes () {
@@ -122,7 +115,7 @@ export default {
       }
 
       if (this.disable === true) {
-        attrs['aria-disabled'] = ''
+        attrs['aria-disabled'] = 'true'
       }
 
       return attrs
@@ -190,12 +183,12 @@ export default {
     this.disable !== true && this.__injectFormInput(
       inner,
       'unshift',
-      `q-${this.type}__native absolute q-ma-none q-pa-none invisible`
+      `q-${this.type}__native absolute q-ma-none q-pa-none`
     )
 
     const child = [
       h('div', {
-        staticClass: `q-${this.type}__inner relative-position no-pointer-events`,
+        staticClass: `q-${this.type}__inner relative-position non-selectable`,
         class: this.innerClass,
         style: this.sizeStyle
       }, inner)

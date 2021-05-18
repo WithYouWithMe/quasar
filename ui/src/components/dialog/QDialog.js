@@ -4,7 +4,7 @@ import HistoryMixin from '../../mixins/history.js'
 import ModelToggleMixin from '../../mixins/model-toggle.js'
 import PortalMixin from '../../mixins/portal.js'
 import PreventScrollMixin from '../../mixins/prevent-scroll.js'
-import AttrsMixin from '../../mixins/attrs.js'
+import AttrsMixin, { ariaHidden } from '../../mixins/attrs.js'
 
 import { childHasFocus } from '../../utils/dom.js'
 import EscapeKey from '../../utils/escape-key.js'
@@ -221,24 +221,14 @@ export default Vue.extend({
                 : innerHeight
 
             if (top > 0 && bottom > height / 2) {
-              const scrollTop = Math.min(
+              document.scrollingElement.scrollTop = Math.min(
                 document.scrollingElement.scrollHeight - height,
                 bottom >= innerHeight
                   ? Infinity
                   : Math.ceil(document.scrollingElement.scrollTop + bottom - height / 2)
               )
-
-              const fn = () => {
-                requestAnimationFrame(() => {
-                  document.scrollingElement.scrollTop += Math.ceil((scrollTop - document.scrollingElement.scrollTop) / 8)
-                  if (document.scrollingElement.scrollTop !== scrollTop) {
-                    fn()
-                  }
-                })
-              }
-
-              fn()
             }
+
             document.activeElement.scrollIntoView()
           }
 
@@ -334,7 +324,7 @@ export default Vue.extend({
 
     __renderPortal (h) {
       return h('div', {
-        staticClass: 'q-dialog fullscreen no-pointer-events',
+        staticClass: `q-dialog fullscreen no-pointer-events q-dialog--${this.useBackdrop === true ? 'modal' : 'seamless'}`,
         class: this.contentClass,
         style: this.contentStyle,
         attrs: this.qAttrs
@@ -344,6 +334,7 @@ export default Vue.extend({
         }, this.useBackdrop === true ? [
           h('div', {
             staticClass: 'q-dialog__backdrop fixed-full',
+            attrs: ariaHidden,
             on: cache(this, 'bkdrop', {
               click: this.__onBackdropClick
             })

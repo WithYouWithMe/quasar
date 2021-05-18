@@ -62,6 +62,10 @@ columns: [ // array of Objects
     //   * is 0 then leave a and b unchanged with respect to each other, but sorted with respect to all different elements
     //   * is greater than 0 then sort b to an index lower than a, i.e. b comes first
 
+    // (optional; requires Quasar v1.15.11+) override 'column-sort-order' prop;
+    // sets column sort order: 'ad' (ascending-descending) or 'da' (descending-ascending)
+    sortOrder: 'ad', // or 'da'
+
     // (optional) you can format the data with a function
     format: (val, row) => `${val}%`,
     // one more format example:
@@ -71,7 +75,9 @@ columns: [ // array of Objects
 
     // body td:
     style: 'width: 500px',
+    // or as Function (requires v1.15.15+) --> style: row => ... (return String/Array/Object)
     classes: 'my-special-class',
+    // or as Function (requires v1.15.15+) --> classes: row => ... (return String)
 
     // (v1.3+) header th:
     headerStyle: 'width: 500px',
@@ -163,6 +169,8 @@ The property `row-key` must be set in order for selection to work properly.
 
 <doc-example title="Multiple selection" file="QTable/MultipleSelection" />
 
+<doc-example title="Selection cell slots (v1.14+)" file="QTable/SelectionSlots" />
+
 <doc-example title="Custom multiple selection" file="QTable/CustomSelection" />
 
 ## Visible columns, custom top, fullscreen
@@ -184,7 +192,7 @@ Below is an example with the user being able to edit “in place” with the hel
 ## Grid style
 
 ::: tip
-You can use the `grid` prop along with `$q.screen` to create a responsive behavior. Example: `:grid="$q.screen.lt.md`. More info: [Screen Plugin](/options/screen-plugin).
+You can use the `grid` prop along with `$q.screen` to create a responsive behavior. Example: `:grid="$q.screen.lt.md"`. More info: [Screen Plugin](/options/screen-plugin).
 :::
 
 In the example below, we let QTable deal with displaying the grid mode (not using the specific slot):
@@ -283,7 +291,7 @@ The example below shows how you can use a slot to customize the entire header ro
 
 <doc-example title="Header slot" file="QTable/SlotHeader" />
 
-Bellow, we use a slot which gets applied to each header cell:
+Below, we use a slot which gets applied to each header cell:
 
 <doc-example title="Header-cell slot" file="QTable/SlotHeaderCell" />
 
@@ -341,7 +349,11 @@ In the example below, steps have been taken to emulate an ajax call to a server.
 
 Below is an example of a naive csv encoding and then exporting table data by using the [exportFile](/quasar-utils/other-utils#Export-file) Quasar util. The browser should trigger a file download. For a more professional approach in regards to encoding we do recommend using [csv-parse](https://csv.js.org/parse/) and [csv-stringify](https://csv.js.org/stringify/) packages.
 
-<doc-example title="Export to csv" file="QTable/ExportCsv" no-edit />
+::: tip
+You could also make use of the `filteredSortedRows` internal computed property of QTable should you want to export the user filtered + sorted data.
+:::
+
+<doc-example title="Export to csv" file="QTable/ExportCsv" />
 
 ## Keyboard navigation
 

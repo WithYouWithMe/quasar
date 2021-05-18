@@ -13,13 +13,13 @@
             span Framew
             img.landing__logo(src="https://cdn.quasar.dev/logo/svg/quasar-logo.svg")
             span rk
-        .text-subtitle1.q-pl-sm Build high-performance <strong>VueJS</strong> user interfaces in record time
-        .q-pt-sm.q-px-sm
-          conf-countdown.landing-countdown.bg-primary.text-white.rounded-borders(
-            color="white"
-            text-color="primary"
-            align-class="justify-center"
-          )
+        .text-subtitle1 Build high-performance <strong>VueJS</strong> user interfaces in record time
+        .text-subtitle1.q-pt-sm
+          | Looking for
+          q-icon.text-red-4.q-mx-sm(:name="mdiFire")
+          doc-link.text-red-4.text-white(to="https://next.quasar.dev/start/upgrade-guide") Quasar v2 beta
+          q-icon.text-red-4.q-mx-sm(:name="mdiFire")
+          | (Vue 3) docs?
         .q-pt-md.q-pl-sm
           .landing__hero-row.landing__hero-btns.q-gutter-sm.row.items-center.justify-center
             q-btn(color="white" text-color="primary" no-caps to="/start" label="Get Started")
@@ -176,7 +176,6 @@ import Sponsor from 'components/page-parts/sponsors-and-backers/Sponsor'
 import SponsorList from 'components/page-parts/sponsors-and-backers/SponsorList'
 import LandingTopBar from 'components/page-parts/landing/LandingTopBar'
 import IntroductionVideo from 'components/page-parts/introduction-to-quasar/IntroductionVideo'
-import ConfCountdown from '../components/ConfCountdown'
 
 import {
   fabGithub, fabTwitter, fabFacebook, fasMedkit,
@@ -186,7 +185,7 @@ import {
 
 import {
   mdiChevronDown, mdiLaunch, mdiBlogger,
-  mdiChat, mdiForum
+  mdiChat, mdiForum, mdiFire
 } from '@quasar/extras/mdi-v5'
 
 export default {
@@ -196,8 +195,7 @@ export default {
     Sponsor,
     SponsorList,
     LandingTopBar,
-    IntroductionVideo,
-    ConfCountdown
+    IntroductionVideo
   },
 
   meta: {
@@ -227,6 +225,7 @@ export default {
     this.mdiBlogger = mdiBlogger
     this.mdiChat = mdiChat
     this.mdiForum = mdiForum
+    this.mdiFire = mdiFire
   }
 }
 </script>
@@ -258,7 +257,7 @@ export default {
 
   &__front
     padding: 130px 16px 100px !important
-    background: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.9) 15%)
+    background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(0, 0, 0, 0.9) 15%)
     > div
       max-width: 700px !important
 

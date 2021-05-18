@@ -27,28 +27,28 @@ Place the Tag Manager snippet into head of your `index.html` file (if you've fol
 ```javascript
 export default {
   logEvent(category, action, label, sessionId = null) {
-    dataLayer.push({
-      'appEventCategory': category,
-      'appEventAction': action,
-      'appEventLabel': label,
-      'sessionId': sessionId
+    window.dataLayer.push({
+      appEventCategory: category,
+      appEventAction: action,
+      appEventLabel: label,
+      sessionId: sessionId
     })
-    dataLayer.push({ 'event': 'appEvent' })
+    window.dataLayer.push({ 'event': 'appEvent' })
   },
 
   logPage(path, name, sessionId = null) {
-    dataLayer.push({
-      'screenPath': path,
-      'screenName': name,
-      'sessionId': sessionId
+    window.dataLayer.push({
+      screenPath: path,
+      screenName: name,
+      sessionId: sessionId
     })
-    dataLayer.push({ 'event': 'appScreenView' })
+    window.dataLayer.push({ 'event': 'appScreenView' })
   }
 }
 ```
 To make sure all the pages in your application are automatically posted to Google Analytics, we create an app boot file:
 ```bash
-$ quasar new boot google-analytics
+$ quasar new boot google-analytics [--format ts]
 ```
 Then we edit the newly created file: `/src/boot/google-analytics.js`:
 ```

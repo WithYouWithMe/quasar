@@ -56,6 +56,12 @@ export default Vue.extend({
     toolbarPush: Boolean,
     toolbarRounded: Boolean,
 
+    paragraphTag: {
+      type: String,
+      validator: v => ['div', 'p'].includes(v),
+      default: 'div'
+    },
+
     contentStyle: Object,
     contentClass: [Object, Array, String],
 
@@ -135,7 +141,7 @@ export default Vue.extend({
         h4: { cmd: 'formatBlock', param: 'H4', icon: i.heading4 || i.heading, tip: e.heading4, htmlTip: `<h4 class="q-ma-none">${e.heading4}</h4>` },
         h5: { cmd: 'formatBlock', param: 'H5', icon: i.heading5 || i.heading, tip: e.heading5, htmlTip: `<h5 class="q-ma-none">${e.heading5}</h5>` },
         h6: { cmd: 'formatBlock', param: 'H6', icon: i.heading6 || i.heading, tip: e.heading6, htmlTip: `<h6 class="q-ma-none">${e.heading6}</h6>` },
-        p: { cmd: 'formatBlock', param: 'DIV', icon: i.heading, tip: e.paragraph },
+        p: { cmd: 'formatBlock', param: this.paragraphTag.toUpperCase(), icon: i.heading, tip: e.paragraph },
         code: { cmd: 'formatBlock', param: 'PRE', icon: i.code, htmlTip: `<code>${e.code}</code>` },
 
         'size-1': { cmd: 'fontSize', param: '1', icon: i.size1 || i.size, tip: e.size1, htmlTip: `<font size="1">${e.size1}</font>` },
@@ -258,17 +264,24 @@ export default Vue.extend({
 
     attrs () {
       if (this.disable === true) {
-        return { 'aria-disabled': '' }
+        return { 'aria-disabled': 'true' }
       }
       if (this.readonly === true) {
-        return { 'aria-readonly': '' }
+        return { 'aria-readonly': 'true' }
+      }
+    },
+
+    onEditor () {
+      return {
+        focusin: this.__onFocusin,
+        focusout: this.__onFocusout
       }
     }
   },
 
   data () {
     return {
-      editWatcher: true,
+      lastEmit: this.value,
       editLinkUrl: null,
       isViewingSource: false
     }
@@ -276,24 +289,22 @@ export default Vue.extend({
 
   watch: {
     value (v) {
-      if (this.editWatcher === true) {
-        this.__setContent(v)
-      }
-      else {
-        this.editWatcher = true
+      if (this.lastEmit !== v) {
+        this.lastEmit = v
+        this.__setContent(v, true)
       }
     }
   },
 
   methods: {
     __onInput () {
-      if (this.editWatcher === true && this.$refs.content !== void 0) {
-        const val = this.isViewingSource
+      if (this.$refs.content !== void 0) {
+        const val = this.isViewingSource === true
           ? this.$refs.content.innerText
           : this.$refs.content.innerHTML
 
         if (val !== this.value) {
-          this.editWatcher = false
+          this.lastEmit = val
           this.$emit('input', val)
         }
       }
@@ -322,21 +333,53 @@ export default Vue.extend({
       this.$emit('click', e)
     },
 
-    __onBlur () {
+    __onBlur (e) {
       if (this.$refs.content !== void 0) {
         const { scrollTop, scrollHeight } = this.$refs.content
         this.__offsetBottom = scrollHeight - scrollTop
       }
       this.$q.platform.is.ie !== true && this.caret.save()
-      this.$emit('blur')
+      this.$emit('blur', e)
     },
 
-    __onFocus () {
+    __onFocus (e) {
       this.$nextTick(() => {
         if (this.$refs.content !== void 0 && this.__offsetBottom !== void 0) {
           this.$refs.content.scrollTop = this.$refs.content.scrollHeight - this.__offsetBottom
         }
       })
+      this.$emit('focus', e)
+    },
+
+    __onFocusin (e) {
+      if (
+        this.$el.contains(e.target) === true &&
+        (
+          e.relatedTarget === null ||
+          this.$el.contains(e.relatedTarget) !== true
+        )
+      ) {
+        const prop = `inner${this.isViewingSource === true ? 'Text' : 'HTML'}`
+        this.caret.restorePosition(this.$refs.content[prop].length)
+        this.refreshToolbar()
+      }
+    },
+
+    __onFocusout (e) {
+      if (
+        this.$el.contains(e.target) === true &&
+        (
+          e.relatedTarget === null ||
+          this.$el.contains(e.relatedTarget) !== true
+        )
+      ) {
+        this.caret.savePosition()
+        this.refreshToolbar()
+      }
+    },
+
+    __onMousedown () {
+      this.__offsetBottom = void 0
     },
 
     __onMouseup (e) {
@@ -351,6 +394,10 @@ export default Vue.extend({
       if (this.qListeners.keyup !== void 0) {
         this.$emit('keyup', e)
       }
+    },
+
+    __onTouchstart () {
+      this.__offsetBottom = void 0
     },
 
     __onTouchend (e) {
@@ -390,13 +437,18 @@ export default Vue.extend({
       return this.$refs.content
     },
 
-    __setContent (v) {
+    __setContent (v, restorePosition) {
       if (this.$refs.content !== void 0) {
-        if (this.isViewingSource) {
-          this.$refs.content.innerText = v
+        if (restorePosition === true) {
+          this.caret.savePosition()
         }
-        else {
-          this.$refs.content.innerHTML = v
+
+        const prop = `inner${this.isViewingSource === true ? 'Text' : 'HTML'}`
+        this.$refs.content[prop] = v
+
+        if (restorePosition === true) {
+          this.caret.restorePosition(this.$refs.content[prop].length)
+          this.refreshToolbar()
         }
       }
     }
@@ -404,7 +456,7 @@ export default Vue.extend({
 
   created () {
     if (isSSR === false) {
-      document.execCommand('defaultParagraphSeparator', false, 'div')
+      document.execCommand('defaultParagraphSeparator', false, this.paragraphTag)
       this.defaultFont = window.getComputedStyle(document.body).fontFamily
     }
   },
@@ -419,15 +471,13 @@ export default Vue.extend({
     let toolbars
 
     if (this.hasToolbar) {
-      const bars = []
-
-      bars.push(
+      const bars = [
         h('div', {
           key: 'qedt_top',
           staticClass: 'q-editor__toolbar row no-wrap scroll-x',
           class: this.toolbarBackgroundClass
         }, getToolbar(h, this))
-      )
+      ]
 
       this.editLinkUrl !== null && bars.push(
         h('div', {
@@ -451,6 +501,10 @@ export default Vue.extend({
       blur: this.__onBlur,
       focus: this.__onFocus,
 
+      // clean saved scroll position
+      mousedown: this.__onMousedown,
+      touchstart: this.__onTouchstart,
+
       // save caret
       mouseup: this.__onMouseup,
       keyup: this.__onKeyup,
@@ -462,7 +516,8 @@ export default Vue.extend({
         height: this.inFullscreen === true ? '100vh' : null
       },
       class: this.classes,
-      attrs: this.attrs
+      attrs: this.attrs,
+      on: this.onEditor
     }, [
       toolbars,
 
